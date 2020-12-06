@@ -20,12 +20,8 @@
   </UICallButton>
   <UICallPopup>
     <label>
-      <join>
-        Join
-      </join>
-      <ignore>
-        Ignore
-      </ignore>
+      <join>Join</join>
+      <ignore>Ignore</ignore>
     </label>
   </UICallPopup>
   <!-- Messages for Platform add-on -->
