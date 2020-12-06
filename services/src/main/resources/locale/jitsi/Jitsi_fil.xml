@@ -15,8 +15,14 @@
     <label>
       <jitsi>Tumawag</jitsi>
       <join>Ang sumali</join>
-      <joined>Joined</joined>
+      <joined>On air</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>Ang sumali</join>
+      <ignore>Ang Balewalain</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
