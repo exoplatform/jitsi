@@ -15,8 +15,14 @@
     <label>
       <jitsi>Call</jitsi>
       <join>Bli med</join>
-      <joined>Joined</joined>
+      <joined>On air</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>Bli med</join>
+      <ignore>Ignorer</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
