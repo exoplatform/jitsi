@@ -15,8 +15,14 @@
     <label>
       <jitsi>تماس</jitsi>
       <join>پیوستن</join>
-      <joined>Joined</joined>
+      <joined>On air</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>پیوستن</join>
+      <ignore>نادیده گرفتن</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
