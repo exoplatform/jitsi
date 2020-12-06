@@ -15,8 +15,14 @@
     <label>
       <jitsi>Chiama</jitsi>
       <join>Ragiungere</join>
-      <joined>Joined</joined>
+      <joined>On air</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>Ragiungere</join>
+      <ignore>Ignorare</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
