@@ -15,8 +15,14 @@
     <label>
       <jitsi>Chamada</jitsi>
       <join>Juntar-se</join>
-      <joined>Joined</joined>
+      <joined>On air</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>Juntar-se</join>
+      <ignore>Ignorar</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
