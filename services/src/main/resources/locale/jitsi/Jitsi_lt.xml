@@ -15,8 +15,14 @@
     <label>
       <jitsi>Skambinti</jitsi>
       <join>Prisijungti</join>
-      <joined>Joined</joined>
+      <joined>On air</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>Prisijungti</join>
+      <ignore>Ignoruoti</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
