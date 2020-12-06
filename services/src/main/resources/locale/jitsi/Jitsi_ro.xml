@@ -15,8 +15,14 @@
     <label>
       <jitsi>Apel</jitsi>
       <join>Înscrie-te</join>
-      <joined>Joined</joined>
+      <joined>On air</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>Înscrie-te</join>
+      <ignore>Ignoră</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
