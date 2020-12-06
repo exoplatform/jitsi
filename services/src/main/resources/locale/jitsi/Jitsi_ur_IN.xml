@@ -15,8 +15,14 @@
     <label>
       <jitsi>Call</jitsi>
       <join>شامل ہوں</join>
-      <joined>Joined</joined>
+      <joined>On air</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>شامل ہوں</join>
+      <ignore>نظرانداز کریں</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
