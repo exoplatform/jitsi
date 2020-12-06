@@ -15,8 +15,14 @@
     <label>
       <jitsi>通话</jitsi>
       <join>加入</join>
-      <joined>Joined</joined>
+      <joined>On air</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>加入</join>
+      <ignore>忽略</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
