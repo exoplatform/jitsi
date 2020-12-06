@@ -15,8 +15,14 @@
     <label>
       <jitsi>مكالمة</jitsi>
       <join>الانضمام</join>
-      <joined>منضم</joined>
+      <joined>مباشر</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>الانضمام</join>
+      <ignore>تجاهل</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
