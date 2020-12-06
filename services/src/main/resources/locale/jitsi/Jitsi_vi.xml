@@ -15,8 +15,14 @@
     <label>
       <jitsi>Gọi điện</jitsi>
       <join>Tham gia</join>
-      <joined>Joined</joined>
+      <joined>On air</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>Tham gia</join>
+      <ignore>Bỏ qua</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
