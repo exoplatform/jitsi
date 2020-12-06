@@ -15,8 +15,14 @@
     <label>
       <jitsi>Panggil</jitsi>
       <join>Gabung</join>
-      <joined>Joined</joined>
+      <joined>On air</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>Gabung</join>
+      <ignore>Mengabaikan</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
