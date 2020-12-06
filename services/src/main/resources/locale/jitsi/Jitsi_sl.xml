@@ -15,8 +15,14 @@
     <label>
       <jitsi>Pokliči</jitsi>
       <join>Pridruži se</join>
-      <joined>Joined</joined>
+      <joined>On air</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>Pridruži se</join>
+      <ignore>Ignoriraj</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
