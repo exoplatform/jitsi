@@ -18,5 +18,11 @@
       <joined>crwdns6966936:0crwdne6966936:0</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>crwdns6966982:0crwdne6966982:0</join>
+      <ignore>crwdns6966984:0crwdne6966984:0</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
