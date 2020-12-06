@@ -15,8 +15,14 @@
     <label>
       <jitsi>Llamada</jitsi>
       <join>Unirse</join>
-      <joined>Unido</joined>
+      <joined>En el aire</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>Unirse</join>
+      <ignore>Ignorar</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
