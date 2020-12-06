@@ -15,8 +15,14 @@
     <label>
       <jitsi>Κλήση</jitsi>
       <join>Γίνετε μέλος</join>
-      <joined>Joined</joined>
+      <joined>On air</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>Γίνετε μέλος</join>
+      <ignore>Παράβλεψη</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
