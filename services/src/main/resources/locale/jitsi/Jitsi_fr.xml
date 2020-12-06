@@ -15,8 +15,14 @@
     <label>
       <jitsi>Appel</jitsi>
       <join>Rejoindre</join>
-      <joined>A rejoint</joined>
+      <joined>En cours</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>Rejoindre</join>
+      <ignore>Ignorer</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
