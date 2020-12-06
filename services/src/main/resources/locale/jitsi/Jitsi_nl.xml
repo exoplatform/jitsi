@@ -15,8 +15,14 @@
     <label>
       <jitsi>Oproep</jitsi>
       <join>Lid worden</join>
-      <joined>Joined</joined>
+      <joined>On air</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>Lid worden</join>
+      <ignore>Negeer</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
