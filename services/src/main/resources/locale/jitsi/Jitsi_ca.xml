@@ -15,8 +15,14 @@
     <label>
       <jitsi>Trucada</jitsi>
       <join>Unir-se</join>
-      <joined>Joined</joined>
+      <joined>On air</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>Unir-se</join>
+      <ignore>Ignora</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
