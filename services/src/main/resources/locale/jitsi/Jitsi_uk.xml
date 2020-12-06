@@ -15,8 +15,14 @@
     <label>
       <jitsi>Дзвінок</jitsi>
       <join>Приєднатися</join>
-      <joined>Joined</joined>
+      <joined>On air</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>Приєднатися</join>
+      <ignore>Ігнорувати</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
