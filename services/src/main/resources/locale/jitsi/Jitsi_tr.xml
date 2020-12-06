@@ -15,8 +15,14 @@
     <label>
       <jitsi>Çağrı</jitsi>
       <join>Katılın</join>
-      <joined>Joined</joined>
+      <joined>On air</joined>
     </label>
   </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>Katılın</join>
+      <ignore>Yoksay</ignore>
+    </label>
+  </UICallPopup>
   <!-- Messages for Platform add-on -->
 </bundle>
