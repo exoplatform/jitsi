@@ -23,7 +23,7 @@
               elevation="0"
               fab
               @click="passAccepted">
-              <i class="uiIconSocPhone"></i>
+              <i class="uiIconPopupPhone"></i>
             </v-btn>
             <span class="button-title" @click="passAccepted">
               {{ i18n.te("UICallPopup.label.join")
@@ -32,7 +32,7 @@
             </span>
             <v-spacer />
             <v-btn class="ma-2 decline-button" outlined fab color="#b1b5b9" @click="passRejected()">
-              <i class="uiIconClose"></i>
+              <i class="uiIconPopupClose"></i>
             </v-btn>
             <span class="button-title" @click="passRejected()">
               {{ i18n.te("UICallPopup.label.ignore")
@@ -82,11 +82,6 @@ export default {
       type: Boolean,
       required: true
     },
-    // state: {
-    //   type: Boolean,
-    //   required: false,
-    //   default: null
-    // },
     i18n: {
       type: Object,
       required: true
@@ -194,45 +189,35 @@ export default {
         border: 1px solid;
         margin-left: 0px !important;
         .v-btn__content {
-          [class^="uiIcon"]::before {
-            font-size: 25px;
+          [class^="uiIcon"] {
+            position: relative;
+            height: 25px;
+            width: 50px;
+            &::before {
+              position: absolute;
+              font-size: 24px;
+              right: 50%;
+              transform: translateX(50%);
+            }
           }
         }
         &.accept-button {
-          .v-btn__content {
-            [class^="uiIcon"] {
-              color: white;
-              &::before {
-                content: "\e92b";
-                left: 0%;
-                bottom: 0%;
-                transform: translate(-13px, 12px);
-                position: absolute;
-              }
+          .uiIconPopupPhone {
+            color: white;
+            &::before {
+              content: "\e92b";
             }
           }
         }
         &.decline-button {
-          &:before {
-            color: transparent;
-          }
-          .v-btn__content {
-            [class^="uiIcon"] {
-              position: relative;
-              height: 25px;
-              width: 50px;
-              &::before {
-                color: #aeb3b7;
-                font-size: 40px;
-                content: "\00d7";
-                position: absolute;
-                right: 0%;
-                bottom: 0%;
-                transform: translate(-13px, 4px);
-              }
-            }
-            .uiIconClose {
-              opacity: 1;
+          //&:before {
+          //  color: transparent;
+          //}
+          .uiIconPopupClose {
+            opacity: 1;
+            &::before {
+              color: #aeb3b7;
+              content: "\e9d2";
             }
           }
         }
@@ -245,13 +230,6 @@ export default {
       }
     }
   }
-  //   @media (max-width: 959px) {
-  //     .v-dialog {
-  //       border-radius: 2px;
-  //       border: 1px solid red;
-  //       height: 160px;
-  //     }
-  //   }
 }
 // }
 </style>
