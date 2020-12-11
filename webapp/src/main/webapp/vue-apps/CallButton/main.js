@@ -75,15 +75,30 @@ export function updateCallState(callId, state) {
 }
 
 function savePopupLoader(callId) {
-  let popupResolve = null;
-  const popupLoading = new Promise((resolve) => {
-    popupResolve = resolve;
-  });
-  callPopups.set(callId, {
-    loader: popupLoading,
-    resolve: popupResolve
-  }); // Add sooner when call state to come
-  log.trace(">>> Save call popup for " + callId);
+  let callPopup = callPopups.get(callId);
+  if (!callPopup) {
+    let popupResolve = null;
+    const popupLoading = new Promise((resolve) => {
+      popupResolve = resolve;
+    });
+    let resolved = false;
+    callPopup = {
+      loader: popupLoading,
+      resolve: (popup) => {
+        if (resolved) {
+          log.trace(">> Call popup already resolved for " + callId);
+        } else {
+          resolved = true; 
+          popupResolve(popup);
+        }
+      }
+    };
+    // Add sooner when call state to come
+    callPopups.set(callId, callPopup);
+    log.trace(">> Save call popup for " + callId);    
+  } else {
+    log.trace(">> Call popup already loading for " + callId);
+  }
 }
 
 export function initCallPopup(
@@ -178,14 +193,13 @@ export function initCallPopup(
     const popup = {
       callId,
       callerId,
-      component: comp,
       close: function() {
         clearTimeout(autoRejectId); // Clear autoreject for the call
         if (playRingtone) {
           localStorage.removeItem(ringId);
         }
-        this.component.isDialogVisible = false;
-        this.component.$destroy();
+        comp.isDialogVisible = false;
+        comp.$destroy();
       },
       onAccepted: function(callback) {
         onAccepted = callback;
