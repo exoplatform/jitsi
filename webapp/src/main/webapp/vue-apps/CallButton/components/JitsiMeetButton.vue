@@ -1,5 +1,5 @@
 <template>
-  <v-btn ref="jitsi" :ripple="false" class="jitsiCallAction btn" outlined @click.native="startCall">
+  <v-btn ref="jitsi" :ripple="false" class="jitsiCallAction btn" outlined @click.stop.prevent="startCall">
     <i :class="buttonTitle.icon" class="uiIconSocPhone uiIconBlue"></i>
     <span>{{ buttonTitle.title }}</span>
   </v-btn>
@@ -119,6 +119,7 @@ export default {
       .v-btn__content {
         letter-spacing: normal;
         padding: 0 10px;
+        height: 100%;
       }
     }
     &.single {
