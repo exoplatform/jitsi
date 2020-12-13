@@ -184,9 +184,49 @@
         });
         return callProcess.promise();
       };
+      
+      /**
+       * Read the call state by given call ID and context
+       */
+      var getCallState = function(callId, context) {
+        var process = new Promise((resolve, reject) => {
+          getCall(callId, context.currentUser.id).then(call => {
+            let user;
+            if (call.state === "started") {
+              for (const participant of call.participants) {
+                if (participant.id === context.currentUser.id) {
+                  user = participant;
+                  break;
+                }
+              }
+            }
+            if (user) {
+              resolve(user.state);
+            } else {
+              resolve(call.state);
+            }
+          }).catch(err => {
+            if (err) {
+              if (err.code === "NOT_FOUND_ERROR") {
+                // Note: if call not found it's (normal for 1-1 calls or groups where no call was run before - we treat it as stopped
+                resolve("stopped");
+              } else {
+                reject(err);
+                log.error("Failed to get call info: " + callId, err);
+                webConferencing.showError("Getting call error", webConferencing.errorText(err));
+              }
+            } else {
+              reject();
+              log.error("Failed to get call info: " + callId);
+              webConferencing.showError("Getting call error", "Error read call information from the server");
+            }
+          });
+        });
+        return process;
+      }
 
       /**
-       * Start a call in given context. 
+       * Start a call in given context and its target details. 
        */
       var startCall = function(context, target) {
         const callProcess = $.Deferred();
@@ -303,16 +343,16 @@
                 startCall(context, target);
               };
               callButton.init(callSettings).then(comp => {
-                button.resolve(comp);
-                getCallState(context, target).then(callState => {
-                  // initial state
+                getCallState(callId, context).then(callState => {
+                  // set initial state of the bytton
                   callButton.updateCallState(callId, callState);
                 });
+                // Resolve with our button - return Vue object here, so it
+                // will be appended to Call Button UI in the Platform
+                button.resolve(comp);
               });
-              // callButton.initDrawer().then(comp => comp);
-              // Resolve with our button - return Vue object here, so it
-              // will be appended to Call Button UI in the Platform
             } else if (buttonType === "element") {
+              // TODO remove this and cleanup
               var $button = $("<a title='" + target.title + "' href='javascript:void(0)' class='myCallAction'>" +
                 "<i class='uiIconMyCall uiIconVideoPortlet uiIconLightGray'></i>" + "<span class='callTitle'>" +
                 self.getCallTitle() + "</span></a>");
@@ -568,41 +608,6 @@
       this.initSettings = function(mySettings) {
         // initialize IM type settings UI
       };
-
-      var getCallState = function(context, target) {
-        var gettingProcess = new Promise(function(resolve) {
-          const callId = getCallId(context, target);
-          getCall(callId, context.currentUser.id).then(call => {
-            let user;
-            if (call.state === "started") {
-              for (const participant of call.participants) {
-                if (participant.id === context.currentUser.id) {
-                  user = participant;
-                  break;
-                }
-              }
-            }
-            if (user) {
-              resolve(user.state);
-            } else {
-              resolve(call.state);
-            }
-          }).catch(err => {
-            if (err) {
-              if (err.code === "NOT_FOUND_ERROR") {
-                resolve(err.code);
-              } else {
-                log.error("Failed to get call info: " + callId, err);
-                webConferencing.showError("Getting call error", webConferencing.errorText(err));
-              }
-            } else {
-              log.error("Failed to get call info: " + callId);
-              webConferencing.showError("Getting call error", "Error read call information from the server");
-            }
-          });
-        });
-        return gettingProcess;
-      }
     };
 
     var provider = new JitsiProvider();
