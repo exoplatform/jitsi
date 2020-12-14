@@ -31,8 +31,20 @@
       const GUEST_TYPE = "guest";
       const GUEST_EXPIRATION_MS = 1000 * 60 * 4; // 4 hrs
       
+      const CALL_URL_PATH = "/jitsi/meet/";
+      
       var self = this;
       var settings;
+
+      /**
+       * Jitsi supports generating URLs for calls.
+       */
+      this.linkSupported = true;
+      
+      /**
+       * Jitsi supports group calls.
+       */
+      this.groupSupported = true;
 
       /**
        * MUST return a call type name. If several types supported, this one is
@@ -97,12 +109,13 @@
       };
 
       /**
-       * Creates callId for given context and target
+       * Creates callId for given context and target. Method for internal use when the target (details of the context) already fetched.
        */
       var getCallId = function(context, target) {
         var callId;
-        if (target.group) {
-          callId = "g_" + (target.type == "chat_room" ? context.roomName : target.id);
+        if (context.isGroup) {
+          // We support spaces and chat rooms in group calls
+          callId = "g_" + (context.isSpace ? context.spaceId : context.roomName);
         } else {
           // Sort call members to have always the same ID for two
           // parts independently on who started the call
@@ -115,19 +128,54 @@
         // Transliterate callId
         return window.slugify(callId);
       };
+      /**
+       * Creates call ID for given context.
+       */
+      this.getCallId = function(context) {
+        var process = $.Deferred();
+        if (context && context.details) {
+          context.details().then(target => {
+            process.resolve(getCallId(context, target));
+          }).catch(err => {
+            process.reject(err);
+          });
+        } else {
+          process.reject("Cannot create call ID for context without details() method");
+        }
+        return process.promise();
+      };
 
       /**
-       * Returns call url
+       * Returns call URL (link).
        */
       var getCallUrl = function(callId) {
-        return window.location.protocol + "//" + window.location.host + "/jitsi/meet/" + callId;
+        return window.location.protocol + "//" + window.location.host + CALL_URL_PATH + callId;
       };
+      this.getCallUrl = getCallUrl;
+
+      /**
+       * Find call ID from a call URL (link).
+       */
+      var findCallId = function(url) {
+        const meetBase = url.indexOf(CALL_URL_PATH);
+        if (meetBase >= 0) {
+          const idFrom = meetBase + CALL_URL_PATH.length;
+          const qStart = url.indexOf("?", idFrom);
+          if (qStart > 0) {
+            return url.substring(idFrom, qStart);
+          } else {
+            return url.substring(idFrom);
+          }
+        }
+        return null;
+      };
+      this.findCallId = findCallId;
 
       /**
        * Creates a new call, returns promise with call object when resolved.
        */
       var createCall = function(callId, currentUser, target) {
-        var participatntsIds = getCallMembers(currentUser, target).map(function(member) {
+        var participantsIds = getCallMembers(currentUser, target).map(function(member) {
           return member.id;
         }).join(";");
         // OK, this call not found - start a new one,
@@ -143,8 +191,7 @@
           provider: self.getType(),
           // tagret's title is a group or user full name
           title: target.title,
-          participants: participatntsIds
-          // string build from array separated by ';'
+          participants: participantsIds // string build from array separated by ';'
         };
         return webConferencing.addCall(callId, callInfo);
       };
@@ -189,40 +236,39 @@
        * Read the call state by given call ID and context
        */
       var getCallState = function(callId, context) {
-        var process = new Promise((resolve, reject) => {
-          getCall(callId, context.currentUser.id).then(call => {
-            let user;
-            if (call.state === "started") {
-              for (const participant of call.participants) {
-                if (participant.id === context.currentUser.id) {
-                  user = participant;
-                  break;
-                }
+        const process = $.Deferred();
+        getCall(callId, context.currentUser.id).then(call => {
+          let user;
+          if (call.state === "started") {
+            for (const participant of call.participants) {
+              if (participant.id === context.currentUser.id) {
+                user = participant;
+                break;
               }
             }
-            if (user) {
-              resolve(user.state);
+          }
+          if (user) {
+            process.resolve(user.state);
+          } else {
+            process.resolve(call.state);
+          }
+        }).catch(err => {
+          if (err) {
+            if (err.code === "NOT_FOUND_ERROR") {
+              // Note: if call not found it's (normal for 1-1 calls or groups where no call was run before - we treat it as stopped
+              process.resolve("stopped");
             } else {
-              resolve(call.state);
+              process.reject(err);
+              log.error("Failed to get call info: " + callId, err);
+              webConferencing.showError("Getting call error", webConferencing.errorText(err));
             }
-          }).catch(err => {
-            if (err) {
-              if (err.code === "NOT_FOUND_ERROR") {
-                // Note: if call not found it's (normal for 1-1 calls or groups where no call was run before - we treat it as stopped
-                resolve("stopped");
-              } else {
-                reject(err);
-                log.error("Failed to get call info: " + callId, err);
-                webConferencing.showError("Getting call error", webConferencing.errorText(err));
-              }
-            } else {
-              reject();
-              log.error("Failed to get call info: " + callId);
-              webConferencing.showError("Getting call error", "Error read call information from the server");
-            }
-          });
+          } else {
+            process.reject();
+            log.error("Failed to get call info: " + callId);
+            webConferencing.showError("Getting call error", "Error read call information from the server");
+          }
         });
-        return process;
+        return process.promise();
       }
 
       /**
@@ -236,7 +282,7 @@
         getCallAppStatus().then(res => {
           if (res.status === "active") {
             getCall(callId, context.currentUser.id).then(call => {
-              if (target.type === "chat_room") {
+              if (context.isRoom) {
                 // Chat room needs members sync to send notifications for call start
                 if (call.state === "stopped" || call.participants.length == 0) {
                   // If room call stopped or empty we update all parties in it to sync members 
