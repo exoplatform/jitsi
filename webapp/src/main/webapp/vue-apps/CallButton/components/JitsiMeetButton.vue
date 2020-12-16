@@ -51,7 +51,7 @@ export default {
         return {
           title: this.i18n.te("UICallButton.label.join")
             ? this.$t("UICallButton.label.join")
-            : "Join",
+            : "Join Call",
           icon: "callIcon-join"
         };
       } else {
@@ -172,6 +172,13 @@ export default {
               span {
                 display: none;
               }
+              .uiIconSocPhone {
+                  font-size: 18px;
+                  margin-bottom: 0px;
+                  &::before {
+                    content: "\e92b";
+                  }
+                }
             }
           }
         }
@@ -218,6 +225,8 @@ export default {
 .jitsiCallAction {
   color: var(--allPagesDarkGrey, #4d5466) !important;
   .uiIconSocPhone {
+    font-size: 14px;
+    margin-bottom: -2px;
     &:before {
       height: 16px;
       width: 16px;
@@ -234,7 +243,6 @@ export default {
   .callIcon-join {
     &:before {
       content: "\E61C";
-      font-size: 16px;
       color: #fb8e18;
     }
   }
