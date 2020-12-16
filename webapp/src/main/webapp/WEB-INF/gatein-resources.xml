@@ -55,6 +55,15 @@
     </script>
   </module>
 
+  <!-- The module for RFC4122 UUID (Universally Unique IDentifier) generation (https://github.com/uuidjs/uuid#umd) -->
+  <module>
+    <name>uuid</name>
+    <load-group>webConferencingJitsiGRP</load-group>
+    <script>
+      <path>/js/uuid.min.js</path>
+    </script>
+  </module>
+
   <module>
     <name>webConferencing_jitsi</name>
     <load-group>webConferencingJitsiGRP</load-group>
@@ -73,6 +82,9 @@
     </depends>
     <depends>
       <module>transliteration</module>
+    </depends>
+    <depends>
+      <module>uuid</module>
     </depends>
   </module>
   <module>
