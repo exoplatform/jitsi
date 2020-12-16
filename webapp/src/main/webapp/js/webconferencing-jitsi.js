@@ -3,7 +3,7 @@
  * provider to Web Conferencing module and then handle calls for portal
  * user/groups.
  */
-(function($, webConferencing, callButton) {
+(function($, webConferencing, callButton, uuid) {
   "use strict";
   var globalWebConferencing = typeof eXo != "undefined" && eXo && eXo.webConferencing ? eXo.webConferencing : null;
   // Use webConferencing from global eXo namespace (for non AMD uses).
@@ -108,39 +108,61 @@
         return callMembers;
       };
 
-      /**
-       * Creates callId for given context and target. Method for internal use when the target (details of the context) already fetched.
-       */
-      var getCallId = function(context, target) {
-        var callId;
-        if (context.isGroup) {
-          // We support spaces and chat rooms in group calls
-          callId = "g_" + (context.isSpace ? context.spaceId : context.roomName);
+      var groupCallId = function(context) {
+        let callId;
+        if (context.isSpaceEvent && context.spaceId) {
+          // Space events
+          callId = "g_" + context.spaceId + "-" + uuidv4().replaceAll("-", "");
         } else {
-          // Sort call members to have always the same ID for two
-          // parts independently on who started the call
-          var callMembersAsc = getCallMembers(context.currentUser, target).map(function(member) {
-            return member.id;
-          }).slice();
-          callMembersAsc.sort();
-          callId = "p_" + callMembersAsc.join("-");
+          // We support spaces and chat rooms in group calls
+          // TODO use roomId for chat room - they are unique
+          callId = "g_" + (context.isSpace ? context.spaceId : context.roomName);
         }
         // Transliterate callId
         return window.slugify(callId);
       };
+
+      var userCallId = function(currentUser, targetUser) {
+        // Sort call members to have always the same ID for two
+        // parts independently on who started the call
+        var callMembersAsc = getCallMembers(currentUser, targetUser).map(function(member) {
+          return member.id;
+        }).slice();
+        callMembersAsc.sort();
+        // Transliterate callId
+        return window.slugify("p_" + callMembersAsc.join("-"));
+      };
+
+      /**
+       * Creates callId for given context and target. Method for internal use when the target (details of the context) already fetched.
+       */
+      var getCallId = function(context, target) {
+        if (context.isGroup) {
+          return groupCallId(context);
+        } else {
+          return userCallId(context.currentUser, target);
+        }
+      };
+
       /**
        * Creates call ID for given context.
        */
       this.getCallId = function(context) {
         var process = $.Deferred();
-        if (context && context.details) {
-          context.details().then(target => {
-            process.resolve(getCallId(context, target));
-          }).catch(err => {
-            process.reject(err);
-          });
+        if (context.isGroup) {
+          // group call ID
+          process.resolve(groupCallId(context));
         } else {
-          process.reject("Cannot create call ID for context without details() method");
+          // 1-1 call ID (it requires fetching target details)
+          if (context && context.details) {
+            context.details().then(target => {
+              process.resolve(userCallId(context.currentUser, target));
+            }).catch(err => {
+              process.reject(err);
+            });
+          } else {
+            process.reject("Cannot create call ID for context without details() method");
+          }
         }
         return process.promise();
       };
@@ -673,4 +695,4 @@
       window.console
         .log("WARN: webConferencing not given and eXo.webConferencing not defined. Jitsi provider registration skipped.");
   }
-})($, webConferencing, callButton);
+})($, webConferencing, callButton, uuid);
