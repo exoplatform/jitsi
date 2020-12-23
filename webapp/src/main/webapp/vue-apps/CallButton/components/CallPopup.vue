@@ -179,9 +179,11 @@ export default {
       color: #333;
     }
     .v-card__actions {
-      grid-column: 2 / span 2;
+      grid-column: 1 / span 3;
       grid-row: 2 / span 1;
       padding: 8px 0px !important;
+      display: flex;
+      justify-content: center;
       .v-btn {
         padding: 0;
         height: 50px;
