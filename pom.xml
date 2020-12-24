@@ -64,7 +64,7 @@
     <addon.exo.jcr.version>6.2.x-SNAPSHOT</addon.exo.jcr.version>
     <org.exoplatform.platform-ui.version>6.2.x-SNAPSHOT</org.exoplatform.platform-ui.version>
     <!-- for tests -->
-    <junit.version>4.12</junit.version>
+    <junit.version>4.13.1</junit.version>
     <io.jsonwebtoken.version>0.10.5</io.jsonwebtoken.version>
     <!-- **************************************** -->
     <!-- Jitsi Microservice -->
