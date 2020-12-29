@@ -1,21 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bundle>
-  <!-- Messages for Platform menu and view settings -->
-  <UIBasicProfile>
-    <label>
-      <jitsi>Jitsi</jitsi>
-    </label>
-  </UIBasicProfile>
-  <UIEditUserProfileForm>
-    <label>
-      <jitsi>Jitsi</jitsi>
-    </label>
-  </UIEditUserProfileForm>
   <UICallButton>
     <label>
       <jitsi>Call</jitsi>
       <join>Join</join>
-      <joined>On air</joined>
+      <joined>Joined</joined>
     </label>
   </UICallButton>
   <UICallPopup>
@@ -24,5 +13,4 @@
       <ignore>Ignore</ignore>
     </label>
   </UICallPopup>
-  <!-- Messages for Platform add-on -->
 </bundle>
