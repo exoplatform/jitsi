@@ -233,7 +233,8 @@
         webConferencing.getCall(callId).then(call => {
           // TODO check does call contain only guests and stop it (guests should be removed) if it's older of 3hrs
           const now = Date.now();
-          if (now - call.lastDate.time > GUEST_EXPIRATION_MS 
+          const lastAccess = new Date(call.lastDate).getTime();
+          if (now - lastAccess > GUEST_EXPIRATION_MS 
               && call.participants.filter(p => p.state === "joined" && p.type !== GUEST_TYPE).length === 0 
               && call.participants.filter(p => p.state !== "leaved" && p.type === GUEST_TYPE).length > 0) {
             log.debug("Call assumed as expired for guests: " + callId + ", now: " + now + ", date: " + JSON.stringify(call.lastDate));
@@ -304,53 +305,73 @@
         getCallAppStatus().then(res => {
           if (res.status === "active") {
             getCall(callId, context.currentUser.id).then(call => {
-              if (context.isRoom) {
+              // We need wait for participants update (in case of a room)
+              const process = $.Deferred();
+              if (context.isRoom && (call.state === "stopped" || call.participants.length == 0)) {
                 // Chat room needs members sync to send notifications for call start
-                if (call.state === "stopped" || call.participants.length == 0) {
-                  // If room call stopped or empty we update all parties in it to sync members 
-                  const participants = Object.values(target.members).map(member => {
-                    return member.id;
-                  });
-                  webConferencing.updateParticipants(callId, participants);
-                }
-              }
-              if (call.state === "stopped") {
-                // Start the call explicitly if it is in stopped state.
-                // This way we will inform all parties about the call start.
-                log.info("Call exists but stopped. Starting call: " + callId);
-                webConferencing.updateCall(callId, "started").then(call => {
-                  log.info("Call started: " + callId + " by " + context.currentUser.id);
-                  callProcess.resolve(call);
-                }).catch(err => {
-                  log.error("Failed start a call: " + callId, err);
-                  webConferencing.showError("Failed start a call", webConferencing.errorText(err));
+                // If room call stopped or empty we update all parties in it to sync members 
+                const participants = Object.values(target.members).map(member => {
+                  return member.id;
+                });
+                webConferencing.updateParticipants(callId, participants).then(call => process.resolve(call)).catch(err => { 
+                  callProcess.reject("Failed to update call participants: " + webConferencing.errorText(err));
                 });
               } else {
-                // otherwise, call already running and no need to send notification to its parties
-                log.info("Call already running. Joining call: " + callId);
-                callProcess.resolve(call);
+                process.resolve(call);
               }
+              process.then(call => {
+                if (!call.state && call.participants.length == 0) {
+                  // If state is null/undefined and no participants in it, then it's a call created but never used.
+                  // Special case for wrongly sticking calls, we need treat it as not found call and create a new one
+                  // Backend side will care about DB consistency and replace that wrong call by an one with right participants and state.
+                  createCall(callId, context.currentUser, target).then(call => {
+                    log.info("Call recreated: " + callId);
+                    callProcess.resolve(call);
+                  }).catch(err => {
+                    log.error("Failed to recreate a call: " + callId, err);
+                    callProcess.reject("Failed to create a call: " + webConferencing.errorText(err));
+                  });
+                } else if (call.state === "stopped") {
+                  // Start the call explicitly if it is in stopped state or state undefined/null.
+                  // This way we will inform all parties about the call start.
+                  log.info("Call exists but stopped. Starting call: " + callId);
+                  webConferencing.updateCall(callId, "started").then(call => {
+                    log.info("Call started: " + callId + " by " + context.currentUser.id);
+                    callProcess.resolve(call);
+                  }).catch(err => {
+                    log.error("Failed to start a call: " + callId, err);
+                    callProcess.reject("Failed to start a call: " + webConferencing.errorText(err));
+                  });
+                } else {
+                  // otherwise, call already running and no need to send notification to its parties
+                  log.info("Call already running. Joining call: " + callId);
+                  callProcess.resolve(call);
+                }
+              });
             }).catch(err => {
               if (err) {
                 if (err.code == "NOT_FOUND_ERROR") {
                   createCall(callId, context.currentUser, target).then(call => {
                     log.info("Call created: " + callId);
                     callProcess.resolve(call);
+                  }).catch(err => {
+                    log.error("Failed to create a call: " + callId, err);
+                    callProcess.reject("Failed to create a call: " + webConferencing.errorText(err));
                   });
                 } else {
                   log.error("Failed to get call info: " + callId, err);
-                  webConferencing.showError("Failed join a call", webConferencing.errorText(err));
+                  callProcess.reject("Failed to join a call: " + webConferencing.errorText(err));
                 }
               } else {
-                log.error("Failed to get call info: " + callId);
-                webConferencing.showError("Failed join a call", "Error read call information from the server");
+                log.error("Failed to get call info: " + callId, err);
+                callProcess.reject("Failed to get call info: error reading call information from the server");
               }
             });
           } else {
             callProcess.reject("The Call App is not active");
           }
         }).catch(err => {
-          callProcess.reject("The Call App is temporary unavailable.");
+          callProcess.reject("The Call App is temporary unavailable (" + webConferencing.errorText(err) + ")");
         });
 
         // We wait for call readiness and invoke start it in the
@@ -364,7 +385,7 @@
         }).catch(err => {
           callWindow.close();
           setTimeout(() => {
-            webConferencing.showError("Cannot open call page", err); // TODO i18n
+            webConferencing.showError("Cannot start a call", err); // TODO i18n
           }, 50);
         });
       };
