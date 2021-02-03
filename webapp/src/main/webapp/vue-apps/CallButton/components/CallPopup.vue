@@ -238,21 +238,24 @@ export default {
 
 <style>
 #vuetify-apps {
-  padding-top: 20px;
   display: flex;
   flex-flow: column;
   align-items: flex-end;
   justify-content: flex-end;
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - 57px);
 }
 .incoming-dialog {
   border: 1px solid #aeb3b7;
 }
 .VuetifyApp.call-popup {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  overflow-y: scroll;
+  position: fixed;
+  height: 100vh;
+  padding-left: 77px;
+  margin-top: 57px;
+  overflow-y: hidden;
+  z-index: 70;
+  right: 0px;
+  pointer-events: none;
 }
 </style>
