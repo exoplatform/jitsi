@@ -20,12 +20,22 @@ package org.exoplatform.webconferencing.jitsi;
 
 import java.util.Locale;
 
+import org.json.JSONObject;
+
+import org.exoplatform.commons.api.settings.SettingService;
+import org.exoplatform.commons.api.settings.SettingValue;
+import org.exoplatform.commons.api.settings.data.Context;
+import org.exoplatform.commons.api.settings.data.Scope;
 import org.exoplatform.container.configuration.ConfigurationException;
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.container.xml.ObjectParameter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.social.core.profile.settings.IMType;
 import org.exoplatform.social.core.profile.settings.UserProfileSettingsService;
+import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.webconferencing.CallProvider;
 import org.exoplatform.webconferencing.UserInfo.IMInfo;
 
@@ -44,6 +54,15 @@ public class JitsiProvider extends CallProvider {
 
   /** The Constant TYPE. */
   public static final String TYPE                        = "jitsi";
+
+  /** The constant JITSI_CONFIGURATION. */
+  public static final String    JITSI_CONFIGURATION         = "jitsi-configuration";
+
+  /** The constant JITSI_SCOPE_NAME. */
+  protected static final String JITSI_SCOPE_NAME            = "webconferencing.jitsi";
+
+  /** The Constant KEY_JITSI_SETTINGS. */
+  protected static final String KEY_JITSI_SETTINGS          = "jitsi-settings";
 
   /** The Constant CONFIG_CLIENT_SECRET. */
   public static final String CONFIG_CLIENT_SECRET        = "client-secret";
@@ -66,17 +85,31 @@ public class JitsiProvider extends CallProvider {
   /**
    * Settings for Jitsi provider.
    */
-  public class JitsiSettings extends Settings {
+  public class Settings extends org.exoplatform.webconferencing.CallProvider.Settings {
 
     /**
-     * Gets the url.
+     * Instantiates a new Jitsi settings.
+     */
+    public Settings() {
+    }
+
+    /**
+     * Gets jitsi configuration.
+     *
+     * @return the jitsi configuration
+     */
+    public Configuration getConfiguration() {
+      return JitsiProvider.this.getConfiguration();
+    }
+
+    /**
+     * Gets Jitsi service URL.
      *
      * @return the url
      */
     public String getUrl() {
-      return JitsiProvider.this.getUrl();
+      return JitsiProvider.this.getServiceUrl();
     }
-
   }
 
   /**
@@ -97,6 +130,18 @@ public class JitsiProvider extends CallProvider {
     // side (in Javascript provider module).
   }
 
+  /** The settings service. */
+  protected final SettingService settingService;
+  
+  /** The identity manager. */
+  protected final IdentityManager     identityManager;
+
+  /** The organization service. */
+  protected final OrganizationService organizationService;
+
+  /** The document service. */
+  protected final SpaceService        spaceService;
+
   /** The internal auth secret. */
   protected final String internalAuthSecret;
 
@@ -104,17 +149,34 @@ public class JitsiProvider extends CallProvider {
   protected final String externalAuthSecret;
 
   /** The connector web-services URL (will be used to generate Call page URLs). */
-  protected final String url;
+  protected final String serviceUrl;
+
+  /** The jitsi configuration. */
+  protected Configuration configuration;
 
   /**
    * Instantiates a new JitsiProvider provider.
    *
+   * @param settingService the setting service
+   * @param identityManager the identity manager
+   * @param organizationService the organization service
+   * @param spaceService the space service
    * @param profileSettings the profile settings
    * @param params the params (from configuration.xml)
    * @throws ConfigurationException the configuration exception
    */
-  public JitsiProvider(UserProfileSettingsService profileSettings, InitParams params) throws ConfigurationException {
+  public JitsiProvider(SettingService settingService,
+                       IdentityManager identityManager,
+                       OrganizationService organizationService,
+                       SpaceService spaceService,
+                       UserProfileSettingsService profileSettings,
+                       InitParams params)
+      throws ConfigurationException {
     super(params);
+    this.settingService = settingService;
+    this.identityManager = identityManager;
+    this.organizationService = organizationService;
+    this.spaceService = spaceService;
     String internalAuthSecret = this.config.get(CONFIG_INTERNAL_AUTH_SECRET);
     if (internalAuthSecret == null || (internalAuthSecret = internalAuthSecret.trim()).length() == 0) {
       throw new ConfigurationException(CONFIG_INTERNAL_AUTH_SECRET + " required and should be non empty.");
@@ -131,23 +193,59 @@ public class JitsiProvider extends CallProvider {
     if (serviceUrl == null || (serviceUrl = serviceUrl.trim()).length() == 0) {
       throw new ConfigurationException(CONFIG_SERVICE_URL + " required and should be non empty.");
     }
-    this.url = serviceUrl;
+    this.serviceUrl = serviceUrl;
 
     if (profileSettings != null) {
       // add plugin programmatically as it's an integral part of the provider
       profileSettings.addIMType(new IMType(TYPE, TITLE));
     }
+
+    // try read Jitsi config from storage first
+    Configuration configuration;
+    try {
+      configuration = readConfig();
+    } catch (Exception e) {
+      LOG.error("Error reading Jitsi configuration", e);
+      configuration = null;
+    }
+
+    if (configuration == null) {
+      ObjectParameter objParam = params.getObjectParam(JITSI_CONFIGURATION);
+      if (objParam != null) {
+        Object obj = objParam.getObject();
+        if (obj != null && Configuration.class.isAssignableFrom(obj.getClass())) {
+          this.configuration = Configuration.class.cast(obj);
+        } else {
+          LOG.warn("Predefined services configuration exists but Configuration object not found.");
+          this.configuration = new Configuration();
+        }
+      } else {
+        this.configuration = new Configuration();
+      }
+    } else {
+      this.configuration = configuration;
+    }
   }
 
   /**
-   * Instantiates a new JitsiProvider provider. This constructor can be used in environments when no
-   * {@link UserProfileSettingsService} found (e.g. in test environments).
+   * Instantiates a new JitsiProvider provider. This constructor can be used in
+   * environments when no {@link UserProfileSettingsService} found (e.g. in test
+   * environments).
    *
+   * @param settingService the setting service
+   * @param identityManager the identity manager
+   * @param organizationService the organization service
+   * @param spaceService the space service
    * @param params the params (from configuration.xml)
    * @throws ConfigurationException the configuration exception
    */
-  public JitsiProvider(InitParams params) throws ConfigurationException {
-    this(null, params);
+  public JitsiProvider(SettingService settingService,
+                       IdentityManager identityManager,
+                       OrganizationService organizationService,
+                       SpaceService spaceService,
+                       InitParams params)
+      throws ConfigurationException {
+    this(settingService, identityManager, organizationService, spaceService, null, params);
   }
 
   /**
@@ -169,21 +267,42 @@ public class JitsiProvider extends CallProvider {
   }
 
   /**
-   * Gets the settings.
+   * Gets Jitsi provider settings.
    *
    * @return the settings
    */
-  public JitsiSettings getSettings() {
-    return new JitsiSettings();
+  public Settings getSettings() {
+    return new Settings();
   }
 
   /**
-   * Gets the url.
+   * Gets Jitsi service URL.
    *
    * @return the url
    */
-  public String getUrl() {
-    return url;
+  public String getServiceUrl() {
+    return serviceUrl;
+  }
+
+  /**
+   * Gets the jitsi configuration.
+   *
+   * @return the jitsi configuration
+   */
+  public Configuration getConfiguration() {
+    return this.configuration.copy();
+  }
+
+  /**
+   * Save jitsi configuration.
+   *
+   * @param conf the conf
+   * @throws Exception the exception
+   */
+  public void saveConfiguration(Configuration conf) throws Exception {
+    saveConfig(conf);
+    this.configuration = conf;
+    logRemoteLogEnabled();
   }
 
   /**
@@ -218,14 +337,13 @@ public class JitsiProvider extends CallProvider {
   public String getTitle() {
     return TITLE;
   }
-
+  
   /**
    * {@inheritDoc}
    */
   @Override
-  public String getDescription(Locale locale) {
-    // TODO Implement i18n description of the provider
-    return super.getDescription(locale);
+  public boolean isLogEnabled() {
+    return configuration.isLogEnabled();
   }
 
   /**
@@ -234,6 +352,148 @@ public class JitsiProvider extends CallProvider {
   @Override
   public String getVersion() {
     return VERSION;
+  }
+
+  /**
+   * Json to Jitsi config.
+   *
+   * @param json the json
+   * @return the Jitsi configuration
+   * @throws Exception the exception
+   */
+  public Configuration jsonToConfig(JSONObject json) throws Exception {
+    Configuration conf = new Configuration();
+
+    boolean logEnabled = json.optBoolean("logEnabled", false);
+    conf.setLogEnabled(logEnabled);
+
+    return conf;
+  }
+
+  /**
+   * Jitsi config to json.
+   *
+   * @param conf the jitsi conf
+   * @return the JSON object
+   * @throws Exception the exception
+   */
+  public JSONObject configToJson(Configuration conf) throws Exception {
+    JSONObject json = new JSONObject();
+
+    json.put("logEnabled", conf.isLogEnabled());
+
+    return json;
+  }
+
+  /**
+   * The Class Configuration.
+   */
+  public static class Configuration {
+
+    /** The enable log. */
+    protected boolean logEnabled;
+
+    /**
+     * Instantiates a new configuration.
+     */
+    public Configuration() {
+    }
+
+      /**
+     * Instantiates a new Configuration.
+     *
+     * @param logEnabled the log enabled
+     */
+    public Configuration(boolean logEnabled) {
+      this.logEnabled = logEnabled;
+    }
+
+      /**
+     * Checks if is log enabled.
+     *
+     * @return true, if is log enabled
+     */
+    public boolean isLogEnabled() {
+      return logEnabled;
+    }
+
+    /**
+     * Sets enabled log.
+     *
+     * @param enableLog the new log enabled
+     */
+    public void setLogEnabled(boolean enableLog) {
+      this.logEnabled = enableLog;
+    }
+
+    /**
+     * Return a copy of the config.
+     *
+     * @return the Jitsi configuration
+     */
+    public Configuration copy() {
+      Configuration copy = new Configuration();
+      copy.setLogEnabled(isLogEnabled());
+      return copy;
+    }
+  }
+
+  /**
+   * Save jitsi config.
+   *
+   * @param conf the conf
+   * @throws Exception the exception
+   */
+  protected void saveConfig(Configuration conf) throws Exception {
+    final String initialGlobalId = Scope.GLOBAL.getId();
+    try {
+      JSONObject json = configToJson(conf);
+      settingService.set(Context.GLOBAL,
+                         Scope.GLOBAL.id(JITSI_SCOPE_NAME),
+                         KEY_JITSI_SETTINGS,
+                         SettingValue.create(json.toString()));
+    } finally {
+      Scope.GLOBAL.id(initialGlobalId);
+    }
+  }
+
+  /**
+   * Read jitsi config.
+   *
+   * @return the Jitsi configuration
+   */
+  protected Configuration readConfig() {
+    final String initialGlobalId = Scope.GLOBAL.getId();
+    try {
+      SettingValue<?> val = settingService.get(Context.GLOBAL, Scope.GLOBAL.id(JITSI_SCOPE_NAME), KEY_JITSI_SETTINGS);
+      if (val != null) {
+        String str = String.valueOf(val.getValue());
+        if (str.startsWith("{")) {
+          // Assuming it's JSON
+          Configuration conf = jsonToConfig(new JSONObject(str));
+          return conf;
+        } else {
+          LOG.warn("Cannot parse saved JitsiConfiguration: " + str);
+        }
+      }
+      return null;
+    } catch (Exception e) {
+      LOG.error("Error getting JitsiConfiguration", e);
+    } finally {
+      Scope.GLOBAL.id(initialGlobalId);
+    }
+    return null;
+  }
+
+  /**
+   * Log remote log enabled.
+   */
+  protected void logRemoteLogEnabled() {
+    if (configuration != null && configuration.isLogEnabled()) {
+      LOG.info("Remote diagnostic log enabled for Jitsi connector");
+    } else {
+      LOG.info("Remote diagnostic log disabled for Jitsi connector");
+    }
   }
 
 }

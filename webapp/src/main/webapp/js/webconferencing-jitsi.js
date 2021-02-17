@@ -3,7 +3,7 @@
  * provider to Web Conferencing module and then handle calls for portal
  * user/groups.
  */
-(function($, webConferencing, callButton, uuid) {
+(function($, webConferencing, callButton, admin) {
   "use strict";
   var globalWebConferencing = typeof eXo != "undefined" && eXo && eXo.webConferencing ? eXo.webConferencing : null;
   // Use webConferencing from global eXo namespace (for non AMD uses).
@@ -28,9 +28,9 @@
 
       const GUEST_TYPE = "guest";
       const GUEST_EXPIRATION_MS = 1000 * 60 * 4; // 4 hrs
-      
+
       const CALL_URL_PATH = "/jitsi/meet/";
-      
+
       var self = this;
       var settings;
 
@@ -38,7 +38,7 @@
        * Jitsi supports generating URLs for calls.
        */
       this.linkSupported = true;
-      
+
       /**
        * Jitsi supports group calls.
        */
@@ -73,15 +73,35 @@
           return settings.title;
         }
       };
-      
+
+      this.getConfiguration = function() {
+        if (settings) {
+          return settings.configuration;
+        }
+      };
+
+      var postSettings = function(settings) {
+        var request = $.ajax({
+          async : true,
+          type : "POST",
+          url : "/portal/rest/jitsiadmin/webconferencing/settings",
+          contentType: "application/json",
+          dataType: "json",
+          data : JSON.stringify(settings)
+        });
+        return webConferencing.initRequest(request);
+      };
+
       /**
        * Request a status of Jitsi Call App
        */
       var getCallAppStatus = function() {
-        return $.get({
-          type: "GET",
-          url: "/jitsi",
+        var request = $.ajax({
+          async : true,
+          type : "GET",
+          url : "/jitsi"
         });
+        return webConferencing.initRequest(request);
       };
 
       /**
@@ -220,7 +240,7 @@
         // Window name should be without spaces according Mozilla!
         return self.getType() + "-" + callId;
       };
-      
+
       /**
        * Read a call from the backend storage by an ID. 
        * Additionally check to keep the backend with calls clean of phantom guests - 
@@ -232,8 +252,8 @@
           // TODO check does call contain only guests and stop it (guests should be removed) if it's older of 3hrs
           const now = Date.now();
           const lastAccess = new Date(call.lastDate).getTime();
-          if (now - lastAccess > GUEST_EXPIRATION_MS 
-              && call.participants.filter(p => p.state === "joined" && p.type !== GUEST_TYPE).length === 0 
+          if (now - lastAccess > GUEST_EXPIRATION_MS
+              && call.participants.filter(p => p.state === "joined" && p.type !== GUEST_TYPE).length === 0
               && call.participants.filter(p => p.state !== "leaved" && p.type === GUEST_TYPE).length > 0) {
             log.debug("Call assumed as expired for guests: " + callId + ", now: " + now + ", date: " + JSON.stringify(call.lastDate));
             webConferencing.updateCall(callId, "stopped").then(call => {
@@ -252,7 +272,7 @@
         });
         return callProcess.promise();
       };
-      
+
       /**
        * Read the call state by given call ID and context
        */
@@ -311,7 +331,7 @@
                 const participants = Object.values(target.members).map(member => {
                   return member.id;
                 });
-                webConferencing.updateParticipants(callId, participants).then(call => process.resolve(call)).catch(err => { 
+                webConferencing.updateParticipants(callId, participants).then(call => process.resolve(call)).catch(err => {
                   callProcess.reject("Failed to update call participants: " + webConferencing.errorText(err));
                 });
               } else {
@@ -369,7 +389,7 @@
             callProcess.reject("The Call App is not active");
           }
         }).catch(err => {
-          callProcess.reject("The Call App is temporary unavailable (" + webConferencing.errorText(err) + ")");
+          callProcess.reject("The Call App is temporary unavailable: " + webConferencing.errorText(err));
         });
 
         // We wait for call readiness and invoke start it in the
@@ -469,7 +489,7 @@
         // core to add a button to a required places
         return button.promise();
       };
-      
+
       /**
        * Returns invite link.
        */
@@ -625,24 +645,47 @@
        * admin user with provider specific settings.
        */
       this.showSettings = function() {
-        // load HTML with settings
-        var $popup = $("#jitsi-settings-popup");
-        if ($popup.length == 0) {
-          $popup = $("<div class='uiPopupWrapper' id='jitsi-settings-popup' style='display: none;'><div>");
-          $(document.body).append($popup);
+        // Deep copy of the settings.configuration as a working copy for the form
+        const config = $.extend(true, {}, settings.configuration);
+        function show() {
+          const adminSettings = {
+            configuration: config,
+            searchUrl: "/portal/rest/identity/search"
+          };
+          admin.showSettings(adminSettings).then(newConfig => {
+            if (newConfig) {
+              // Save settings (logEnabled)
+              postSettings(newConfig).then(savedSettings => {
+                settings.configuration.logEnabled = savedSettings.logEnabled;
+              }).catch(err => {
+                log.showError("Failed to save provider settings (logEnabled)", err);//message("jitsi.admin.errorSavingSettings")
+              });
+              // Save provider's new permissions:
+              const permissions = [];
+              newConfig.permissions.forEach(permission => {
+                if (permission.id) {
+                  permissions.push(permission.id);
+                }
+              });
+              webConferencing.postProviderPermissions(settings.type, permissions.join(" ")).catch(err => {
+                log.error("Failed to save provider permissions", err);
+              });
+            } // otherwise, it's canceled or closed dialog - do nothing
+          });
         }
-        $popup.load("/jitsi/settings", function(content, textStatus) {
-          if (textStatus == "success" || textStatus == "notmodified") {
-            var $settings = $popup.find(".settingsForm");
-            // TODO fill settings form and handle its changes to update the
-            // settings on the server (e.g. by using your provider REST service)
-            // .....
-            // Show the settings popup when ready
-            $popup.show();
-          } // otherwise it's error
-        });
+        if (!config.permissions) {
+          webConferencing.getProviderPermissions(settings.type).then(permissions => {
+            config.permissions = permissions;
+            show();
+          }).catch(err => {
+            log.showError("Failed to read provider permissions", err);
+          });
+        } else {
+          show();
+        }
       };
 
+      // ****** Custom methods required by the connector itself or dependent on it modules ******
       /**
        * Set connector settings from the server-side. Will be called by script
        * of JitsiPortlet class.
@@ -654,8 +697,7 @@
 
     var provider = new JitsiProvider();
 
-    // Add Jitsi provider into webConferencing object of global eXo namespace
-    // (for non AMD uses)
+    // Add Jitsi provider into webConferencing object of global eXo namespace (for non AMD uses)
     if (globalWebConferencing) {
       globalWebConferencing.jitsi = provider;
     } else {
@@ -666,7 +708,6 @@
     return provider;
   } else {
     window.console &&
-      window.console
-        .log("WARN: webConferencing not given and eXo.webConferencing not defined. Jitsi provider registration skipped.");
+      window.console.log("WARN: webConferencing not given and eXo.webConferencing not defined. Jitsi provider registration skipped.");
   }
-})($, webConferencing, callButton, uuid);
+})($, webConferencing, callButton, admin);

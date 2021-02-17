@@ -104,10 +104,10 @@ public class JitsiGateway extends AbstractHttpServlet {
    * {@inheritDoc}
    */
   @Override
-  protected void doGet(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException {
+  protected void doGet(final HttpServletRequest httpRequest, final HttpServletResponse httpResponse) throws ServletException, IOException {
     WebConferencingService webconferencing =
                                            (WebConferencingService) getContainer().getComponentInstanceOfType(WebConferencingService.class);
-    JitsiProvider jitsiProvider = (JitsiProvider) webconferencing.getProvider(JitsiProvider.TYPE);
+    final JitsiProvider jitsiProvider = (JitsiProvider) webconferencing.getProvider(JitsiProvider.TYPE);
     final AsyncContext ctx = httpRequest.startAsync();
     ctx.start(new Runnable() {
       public void run() {
@@ -122,7 +122,7 @@ public class JitsiGateway extends AbstractHttpServlet {
           // TODO: separate the Gateway from local resources, make two .wars
           handleResourceRequest(uri, httpRequest, httpResponse);
         } else {
-          String requestUrl = new StringBuilder(jitsiProvider.getSettings().getUrl()).append(uri).toString();
+          String requestUrl = new StringBuilder(jitsiProvider.getServiceUrl()).append(uri).toString();
           forward(requestUrl, Action.EXTERNAL_AUTH, jitsiProvider.getExternalAuthSecret(), req, resp);
         }
         ctx.complete();

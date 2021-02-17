@@ -35,7 +35,6 @@ export default {
   data: function() {
     return {
       settings: this.callSettings,
-      log: null,
       callWindow: null
     };
   },
@@ -63,7 +62,6 @@ export default {
     }
   },
   created() {
-    this.log = webConferencing.getLog("jitsi");
     const callButton = this.$refs.jitsi;
   },
 

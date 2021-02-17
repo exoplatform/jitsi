@@ -18,6 +18,7 @@
 @iconChatDrawer:rgba(0,0,0,0.54);
 @requiredInputColor: #e9322d;
 @focusInputColor: #a6bad6;
+@infoColor:       #476a9c;    // border info
 
 /* layout */
 @sideBarWidth: 20vw;
@@ -36,6 +37,7 @@
 @defaultBorder: 1px solid @borderColor;
 @bigBorder: 2px solid @borderColor;
 @defaultShadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
+@baseBorderRadius:      3px;
 /* borde & shadow */
 
 /* Responsive */
@@ -52,6 +54,7 @@
 @secondaryIconColor: @grayLight;
 @tertiaryIconColor: #fff;
 @actionIconsSize: 20px;
+@colorIconDefault: @primaryColor;
 
 // scroll webkit
 @scrollSize: 5px;
@@ -63,3 +66,14 @@
 // blockquote 
 @quoteBarColor: #A8B3C5;
 @quoteTextColor: @grayLight;
+
+// Background color
+@baseBackgroundDefault: #ffffff;
+@baseBackground: var(--allPagesBaseBackground, @baseBackgroundDefault); // default background , background for content display
+
+// Scaffolding
+// -------------------------
+@bodyBackground: @baseBackground;
+@sidebarBackground: @secondaryColor;
+@textColorDefault: #333333;
+@textColor: var(--allPagesBaseTextColor, @textColorDefault);       // #333333

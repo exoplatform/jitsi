@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bundle>
+  <jitsi>
+    <admin>
+      <title>Jitsi settings</title>
+      <save>Save</save>
+      <cancel>Cancel</cancel>
+      <errorSavingSettings>Error saving settings</errorSavingSettings>
+      <errorOpenSettings>Failed to open admin settings</errorOpenSettings>
+      <errorSearchPermissions>Failed to search permissions</errorSearchPermissions>
+
+      <!-- Error Diagnostics -->
+      <errorDiagnostic>Error Diagnostics</errorDiagnostic>
+      <enableLogCollection>Enable client-side log collection</enableLogCollection>
+      <logCollectionInfo>This flag will log information from client in the server logs in order to troubleshoot Jitsi connectivity issue. Use carefully, this mode is verbose and may cause significant network overhead.</logCollectionInfo>
+
+      <!-- Permissions -->
+      <permissions>Permissions</permissions>
+      <searchLabel>Enter user or group name</searchLabel>
+      <withPermissions>Who has permission</withPermissions>
+      <everybody>Everybody</everybody>
+      <none>None</none>
+    </admin>
+  </jitsi>
+</bundle>
