@@ -19,13 +19,11 @@
     // provider.
     // We know it's jitsi here.
     var log = webConferencing.getLog("jitsi");
-    // log.trace("> Loading at " + location.origin + location.pathname);
 
     /**
      * An object that implements Web Conferencing SPI contract for a call
      * provider.
      */
-
     function JitsiProvider() {
 
       const GUEST_TYPE = "guest";
@@ -391,8 +389,8 @@
       };
 
       /**
-       * MUST be implemented by a connector provider to build a Call button and
-       * call invoked by it. Web Conferencing core provides a context object
+       * Build a Call button and call invoked by it. 
+       * Web Conferencing core provides a context object
        * where following information can be found: - currentUser - username of
        * an user that will run the call - userId - if found, it's 1:1 call
        * context, it's an username of another participant for the call - spaceId -
@@ -411,9 +409,9 @@
        * IdentityInfo - consult related classes for full set of available bean
        * fields.
        * 
-       * This method returns a jQuery promise. When it resolved (done) it should
-       * offer a jQuery element of a button(s) container. When rejected
-       * (failed), need return an error description text (it may be shown
+       * This method returns a promise. When it resolved (done) it should
+       * offer a Vue object of a button(s) container. When rejected
+       * (failed), it returns an error description text (it may be shown
        * directly to an user), the connector will not be added to the call
        * button and user will not see it.
        */
@@ -440,16 +438,10 @@
                 // will be appended to Call Button UI in the Platform
                 button.resolve(comp);
               });
-            } else if (buttonType === "element") {
-              // TODO remove this and cleanup
-              var $button = $("<a title='" + target.title + "' href='javascript:void(0)' class='myCallAction'>" +
-                "<i class='uiIconMyCall uiIconVideoPortlet uiIconLightGray'></i>" + "<span class='callTitle'>" +
-                self.getCallTitle() + "</span></a>");
-              $button.click(function() {
-                startCall(context, target);
-              });
-              $button.data("targetid", target.id);
-              button.resolve($button[0]);
+            } else {
+              const message = "Button type not supported: " + buttonType;
+              log.error(message);
+              button.reject(message);
             }
           }).catch(err => {
             // On error, we don't show the button for this context
@@ -486,7 +478,7 @@
       };
 
       /**
-       * OPTIONAL method. If implemented, it will be called by Web Conferencing
+       * Init Jitsi provider, it will be called by Web Conferencing
        * core on addProvider() method. It is assumed that the connector will
        * initialize internals depending on the given context.
        */
@@ -651,51 +643,12 @@
         });
       };
 
-      // ****** Custom methods required by the connector itself or dependent on
-      // it modules ******
-
       /**
        * Set connector settings from the server-side. Will be called by script
        * of JitsiPortlet class.
        */
-      this.configure = function(mySettings) {
-        settings = mySettings;
-      };
-
-      /**
-       * Used in the callButton() code. Also can be used by dependent modules
-       * (e.g. when need run a call page in a window).
-       */
-      this.getApiClientId = function() {
-        if (settings) {
-          return settings.apiClientId;
-        }
-      };
-
-      /**
-       * Used in the callButton() code. Also can be used by dependent modules
-       * (e.g. when need run a call page in a window).
-       */
-      this.getUrl = function() {
-        if (settings) {
-          return settings.url;
-        }
-      };
-
-      /**
-       * Used in the callButton() code. Also can be used by dependent modules
-       * (e.g. when need run a call page in a window).
-       */
-      this.getCallTitle = function() {
-        return "Jitsi Call"; // TODO Do we need it?
-      };
-
-      /**
-       * Sample function used by JitsiIMRenderer to show how IM type renderer
-       * can be initialized.
-       */
-      this.initSettings = function(mySettings) {
-        // initialize IM type settings UI
+      this.configure = function(newSettings) {
+        settings = newSettings;
       };
     };
 
