@@ -23,12 +23,6 @@
   xsi:schemaLocation="http://www.exoplatform.org/xml/ns/gatein_resources_1_4 http://www.exoplatform.org/xml/ns/gatein_resources_1_4"
   xmlns="http://www.exoplatform.org/xml/ns/gatein_resources_1_4">
 
-  <javascript>
-    <param>
-      <js-module>jitsi-plugin</js-module>
-      <js-path>/js/jitsi-plugin.js</js-path>
-    </param>
-  </javascript>
   <!-- CSS for MyConnector Calls support in Platform -->
   <portlet-skin>
     <application-name>jitsi</application-name>
