@@ -19,16 +19,29 @@ const callPopups = new Map();
 
 export function init(settings) {
   // getting locale ressources
+  const parentContainer = document.querySelector(".leftHeaderDrawer");
+  if (parentContainer) {
+    parentContainer.addEventListener("click", e => {
+      if (e.target.classList.contains("backButton")
+        && e.target.parentElement.classList.contains("leftHeaderDrawer")) {
+        const container = document.querySelector(".single-btn-container");
+        const button = document.querySelector(".jitsiCallAction")
+        if (container && button) {
+          container.removeChild(button);
+        }
+      }
+    });
+  }
   return exoi18n.loadLanguageAsync(lang, url).then((i18n) => {
     // init Vue app when locale ressources are ready
-    return new Vue({
+    const comp = new Vue({
       data() {
         return {
           callSettings: settings
         };
       },
       created() {
-        if(!callStates.has(this.callSettings.callId)) {
+        if (!callStates.has(this.callSettings.callId)) {
           callStates.set(this.callSettings.callId, new Map());
         }
         // different buttons for the same call states
@@ -58,6 +71,7 @@ export function init(settings) {
       i18n,
       vuetify,
     });
+    return comp;
   });
 }
 
