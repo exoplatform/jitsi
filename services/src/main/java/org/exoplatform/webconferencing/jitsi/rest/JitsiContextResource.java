@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2003-2021 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.exoplatform.webconferencing.jitsi.rest;
 
 import static org.exoplatform.webconferencing.Utils.getCurrentContext;
@@ -29,22 +47,29 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.IdentityConstants;
+import org.exoplatform.webconferencing.CallProviderConfiguration;
 import org.exoplatform.webconferencing.ContextInfo;
 import org.exoplatform.webconferencing.IdentityStateException;
 import org.exoplatform.webconferencing.UploadFileException;
 import org.exoplatform.webconferencing.UploadFileInfo;
 import org.exoplatform.webconferencing.UserInfo;
 import org.exoplatform.webconferencing.WebConferencingService;
+import org.exoplatform.webconferencing.client.ErrorInfo;
 import org.exoplatform.webconferencing.jitsi.JitsiProvider;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 /**
  * The Class JitsiContextResource.
  */
 @Path("/jitsi")
+@Api(tags = "/jitsi", value = "/jitsi", description = "Operations on Jitsi provider")
 public class JitsiContextResource implements ResourceContainer {
 
   /** The Constant INTERNAL_AUTH. */
@@ -83,6 +108,12 @@ public class JitsiContextResource implements ResourceContainer {
   @GET
   @Path("/context/{userId}")
   @Produces(MediaType.APPLICATION_JSON)
+  @ApiOperation(value = "Return user context settings", httpMethod = "GET", response = CallProviderConfiguration.class, 
+    notes = "Use this method to read a call provider configuration. This operation only avalable to Administrator user.")
+  @ApiResponses(value = { @ApiResponse(code = 200, message = "Request fulfilled. Provider configuration object returned.", response = CallProviderConfiguration.class),
+    @ApiResponse(code = 401, message = "Unauthorized user (conversation state not present). Error code: " + ErrorInfo.CODE_ACCESS_ERROR),
+    @ApiResponse(code = 404, message = "Provider not found. Error code: " + ErrorInfo.CODE_NOT_FOUND_ERROR),
+    @ApiResponse(code = 500, message = "Internal server error due to data encoding or formatting result to JSON. Error code: " + ErrorInfo.CODE_SERVER_ERROR)})
   public ContextInfo context(@Context HttpServletRequest request, @PathParam("userId") String userId) {
     return getCurrentContext(userId, request.getLocale());
   }
@@ -111,6 +142,7 @@ public class JitsiContextResource implements ResourceContainer {
    * @param token the token
    * @return the response
    */
+  @SuppressWarnings("unchecked")
   @POST
   @Path("/upload")
   @Consumes(MediaType.MULTIPART_FORM_DATA)

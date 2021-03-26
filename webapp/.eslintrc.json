@@ -70,7 +70,7 @@
         "no-var": ["error"],
         "no-with": ["error"],
         "prefer-const": ["error"],
-        "prefer-promise-reject-errors": ["error"],
+        "prefer-promise-reject-errors": "off",
         "prefer-rest-params": ["error"],
         "prefer-spread": ["error"],
         "prefer-template": ["warn"],
