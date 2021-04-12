@@ -2,11 +2,7 @@ import JitsiMeetButton from "./components/JitsiMeetButton.vue";
 import CallPopup from "./components/CallPopup.vue";
 
 Vue.component("jitsi-meet-button", JitsiMeetButton);
-// Vue.component("CallPopup", CallPopup);
-const vuetify = new Vuetify({
-  dark: true,
-  iconfont: "",
-});
+const vuetify = new Vuetify(eXo.env.portal.vuetifyPreset);
 
 // getting language of user
 const lang = (eXo && eXo.env && eXo.env.portal && eXo.env.portal.language) || "en";
