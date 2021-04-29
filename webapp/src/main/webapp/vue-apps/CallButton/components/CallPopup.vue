@@ -11,8 +11,11 @@
         hide-overlay
         width="430">
         <v-card>
-          <v-avatar color="#578dc9" width="70" height="70">
-            <img :src="avatar" :alt="caller" >
+          <v-avatar
+            color="#578dc9"
+            width="70"
+            height="70">
+            <img :src="avatar" :alt="caller">
           </v-avatar>
           <i class="uiIconSocPhone start-call"></i>
           <v-card-text color="#333" v-html="callerMessage" />
@@ -28,19 +31,29 @@
             <span class="button-title" @click="passAccepted">
               {{ i18n.te("UICallPopup.label.join")
                 ? $t("UICallPopup.label.join")
-              : "Join" }}
+                : "Join" }}
             </span>
             <v-spacer />
-            <v-btn class="ma-2 decline-button" outlined fab color="#b1b5b9" @click="passRejected()">
+            <v-btn
+              class="ma-2 decline-button"
+              outlined
+              fab
+              color="#b1b5b9"
+              @click="passRejected()">
               <i class="uiIconPopupClose"></i>
             </v-btn>
             <span class="button-title" @click="passRejected()">
               {{ i18n.te("UICallPopup.label.ignore")
                 ? $t("UICallPopup.label.ignore")
-              : "Ignore" }}
+                : "Ignore" }}
             </span>
-            <audio ref="audio" class="audio-call-popup" style="display: none" loop preload="auto">
-              <source src="/jitsi/resources/audio/ringtone_exo-1.m4a" >
+            <audio
+              ref="audio"
+              class="audio-call-popup"
+              style="display: none"
+              loop
+              preload="auto">
+              <source src="/jitsi/resources/audio/ringtone_exo-1.m4a">
               <p>"Your browser does not support the audio element</p>
             </audio>
           </v-card-actions>
@@ -59,7 +72,7 @@ function stopAudio(audio) {
 }
 
 export default {
-  name: "CallPopup",
+  name: 'CallPopup',
   props: {
     isDialogVisible: {
       type: Boolean,
@@ -93,7 +106,7 @@ export default {
     };
   },
   mounted() {
-    this.state = "shown";
+    this.state = 'shown';
     if (this.playRingtone) {
       try {
         //audio.muted = true;
@@ -104,22 +117,22 @@ export default {
         this.$refs.audio.play();
       } catch (e) {
         // TODO we need remove this popup flag from local storage to let others to play
-        console.log("Error playing ringtone for Jitsi call: " + this.caller, e);
+        console.error(`Error playing ringtone for Jitsi call: ${  this.caller}`, e);
       }
     }
   },
   methods: {
     passAccepted() {
-      if (this.state === "shown") {
-        this.state = "closed";
-        this.$emit("accepted");
+      if (this.state === 'shown') {
+        this.state = 'closed';
+        this.$emit('accepted');
         stopAudio(this.$refs.audio);
       }
     },
     passRejected() {
-      if (this.state === "shown") {
-        this.state = "closed";
-        this.$emit("rejected");
+      if (this.state === 'shown') {
+        this.state = 'closed';
+        this.$emit('rejected');
         stopAudio(this.$refs.audio);
       }
     }

@@ -1,13 +1,25 @@
 <template>
   <div class="VuetifyApp">
     <v-app>
-      <exo-drawer ref="callPopupDrawer" class="callPopupDrawer" body-classes="hide-scroll" right style="width: 475px;">
+      <exo-drawer
+        ref="callPopupDrawer"
+        class="callPopupDrawer"
+        body-classes="hide-scroll"
+        right
+        style="width: 475px;">
         <template slot="content">
           <div>Hello1</div>
           <div>Hello2</div>
           <div>Hello3</div>
           <!-- <ul class="call-popup"> -->
-          <CallPopup :isdialogvisible="isDialogVisible" :caller="caller" :avatar="avatar" :callermessage="callerMessage" :playringtone="playRingtone" :state="state" :i18n="i18n"/>
+          <call-popup
+            :isdialogvisible="isDialogVisible"
+            :caller="caller"
+            :avatar="avatar"
+            :callermessage="callerMessage"
+            :playringtone="playRingtone"
+            :state="state"
+            :i18n="i18n" />
           <!-- </ul> -->
         </template>
       </exo-drawer>
@@ -15,7 +27,7 @@
   </div>
 </template>
 <script>
-import CallPopup from "./CallPopup.vue";
+import CallPopup from './CallPopup.vue';
 export default {
   components: {
     CallPopup
@@ -56,10 +68,10 @@ export default {
     return {
     };
   },
-//   created() {
-//   },
+  //   created() {
+  //   },
   mounted() {
-   this.$refs.callPopupDrawer.open();
+    this.$refs.callPopupDrawer.open();
   },
   methods: {
     // openDrawer() {

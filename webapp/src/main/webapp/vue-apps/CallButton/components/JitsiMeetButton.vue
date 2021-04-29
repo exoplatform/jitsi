@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: "JitsiMeetButton",
+  name: 'JitsiMeetButton',
   props: {
     callSettings: {
       type: Object,
@@ -47,24 +47,23 @@ export default {
       return this.callSettings.context.parentClasses;
     },
     buttonTitle: function() {
-      if (this.callState === "joined") {
-        return this.generateButtonTitle("UICallButton.label.joined",
-          "Joined",
-          "uiIconCallJoined");
-      } else if (this.callState === "started" || this.callState === "leaved") {
-        return this.generateButtonTitle("UICallButton.label.join",
-          "Join Call",
-          "uiIconCallJoin");
+      if (this.callState === 'joined') {
+        return this.generateButtonTitle('UICallButton.label.joined',
+          'Joined',
+          'uiIconCallJoined');
+      } else if (this.callState === 'started' || this.callState === 'leaved') {
+        return this.generateButtonTitle('UICallButton.label.join',
+          'Join Call',
+          'uiIconCallJoin');
       } else {
-        return this.generateButtonTitle("UICallButton.label.jitsi",
-          "Call",
-          "uiIconCallStart");
+        return this.generateButtonTitle('UICallButton.label.jitsi',
+          'Call',
+          'uiIconCallStart');
       }
     }
   },
   created() {
-    this.log = webConferencing.getLog("jitsi");
-    const callButton = this.$refs.jitsi;
+    this.log = webConferencing.getLog('jitsi');
   },
 
   mounted() {
@@ -78,11 +77,11 @@ export default {
     generateButtonTitle: function(label, defaultText, icon) {
       if (this.parentClasses) {
         return {
-          title: !this.parentClasses.includes("call-button-mini")
+          title: !this.parentClasses.includes('call-button-mini')
             ? this.i18n.te(label)
               ? this.$t(label)
               : defaultText
-            : "",
+            : '',
           icon: icon
         };
       } else {

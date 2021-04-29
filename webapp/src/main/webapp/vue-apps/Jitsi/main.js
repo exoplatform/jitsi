@@ -1,16 +1,16 @@
-import Jitsi from "./components/Admin.vue";
+import Jitsi from './components/Admin.vue';
 
 Vue.use(Vuetify);
-Vue.component("Jitsi", Jitsi)
+Vue.component('Jitsi', Jitsi);
 const vuetify = new Vuetify({
   dark: true,
-  iconfont: ""
+  iconfont: ''
 });
 
 // getting language of user
-const lang = (eXo && eXo.env && eXo.env.portal && eXo.env.portal.language) || "en";
-const localePortlet = "locale.webconferencing";
-const resourceBundleName = "Jitsi";
+const lang = (eXo && eXo.env && eXo.env.portal && eXo.env.portal.language) || 'en';
+const localePortlet = 'locale.webconferencing';
+const resourceBundleName = 'Jitsi';
 const url = `${eXo.env.portal.context}/${eXo.env.portal.rest}/i18n/bundle/${localePortlet}.${resourceBundleName}-${lang}.json`;
 
 export function init(settings) {
@@ -22,7 +22,7 @@ export function init(settings) {
         h(Jitsi, { props: {...settings, i18n: i18n, language: lang, resourceBundleName: resourceBundleName } }),
       i18n,
       vuetify
-    }).$mount("#Jitsi");
+    }).$mount('#Jitsi');
   });
 }
 

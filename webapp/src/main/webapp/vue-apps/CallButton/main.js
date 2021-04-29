@@ -1,27 +1,27 @@
-import JitsiMeetButton from "./components/JitsiMeetButton.vue";
-import CallPopup from "./components/CallPopup.vue";
+import JitsiMeetButton from './components/JitsiMeetButton.vue';
+import CallPopup from './components/CallPopup.vue';
 
-Vue.component("jitsi-meet-button", JitsiMeetButton);
+Vue.component('jitsi-meet-button', JitsiMeetButton);
 const vuetify = new Vuetify(eXo.env.portal.vuetifyPreset);
 
 // getting language of user
-const lang = (eXo && eXo.env && eXo.env.portal && eXo.env.portal.language) || "en";
-const localePortlet = "locale.jitsi";
-const resourceBundleName = "Jitsi";
+const lang = (eXo && eXo.env && eXo.env.portal && eXo.env.portal.language) || 'en';
+const localePortlet = 'locale.jitsi';
+const resourceBundleName = 'Jitsi';
 const url = `${eXo.env.portal.context}/${eXo.env.portal.rest}/i18n/bundle/${localePortlet}.${resourceBundleName}-${lang}.json`;
-const log = webConferencing.getLog("jitsi");
+const log = webConferencing.getLog('jitsi');
 const callStates = new Map();
 const callPopups = new Map();
 
 export function init(settings) {
   // getting locale ressources
-  const parentContainer = document.querySelector(".leftHeaderDrawer");
+  const parentContainer = document.querySelector('.leftHeaderDrawer');
   if (parentContainer) {
-    parentContainer.addEventListener("click", e => {
-      if (e.target.classList.contains("backButton")
-        && e.target.parentElement.classList.contains("leftHeaderDrawer")) {
-        const container = document.querySelector(".single-btn-container");
-        const button = document.querySelector(".jitsiCallAction")
+    parentContainer.addEventListener('click', e => {
+      if (e.target.classList.contains('backButton')
+        && e.target.parentElement.classList.contains('leftHeaderDrawer')) {
+        const container = document.querySelector('.single-btn-container');
+        const button = document.querySelector('.jitsiCallAction');
         if (container && button) {
           container.removeChild(button);
         }
@@ -49,7 +49,7 @@ export function init(settings) {
       },
       methods: {
         setCallState: function(callState) {
-          this.$set(this.callSettings, "callState", callState);
+          this.$set(this.callSettings, 'callState', callState);
         },
         getCallState: function() {
           return this.callSettings.callState;
@@ -72,8 +72,8 @@ export function init(settings) {
 }
 
 export function updateCallState(callId, state) {
-  log.trace(">>> updateCallState for " + callId + " state: " + state);
-  if (state === "started") {
+  log.trace(`>>> updateCallState for ${  callId  } state: ${  state}`);
+  if (state === 'started') {
     savePopupLoader(callId);
   }
   const buttonStates = callStates.get(callId);
@@ -96,7 +96,7 @@ function savePopupLoader(callId) {
       loader: popupLoading,
       resolve: (popup) => {
         if (resolved) {
-          log.trace(">> Call popup already resolved for " + callId);
+          log.trace(`>> Call popup already resolved for ${  callId}`);
         } else {
           resolved = true; 
           popupResolve(popup);
@@ -105,19 +105,19 @@ function savePopupLoader(callId) {
     };
     // Add sooner when call state to come
     callPopups.set(callId, callPopup);
-    log.trace(">> Save call popup for " + callId);    
+    log.trace(`>> Save call popup for ${  callId}`);    
   } else {
-    log.trace(">> Call popup already loading for " + callId);
+    log.trace(`>> Call popup already loading for ${  callId}`);
   }
 }
 
 export function initCallPopup(
-    callId,
-    callerId,
-    callerLink,
-    callerAvatar,
-    callerMessage,
-    playRingtone) {
+  callId,
+  callerId,
+  callerLink,
+  callerAvatar,
+  callerMessage,
+  playRingtone) {
 
   const currentUserId = webConferencing.getUser().id;
       
@@ -127,7 +127,7 @@ export function initCallPopup(
     // TODO We need play a single ringtone per page - it will play for at least one incoming call
     const callRinging = localStorage.getItem(ringId);
     if (!callRinging || Date.now() - callRinging > 5000) {
-      log.trace(">>> Call start ringing: " + callId + " for " + currentUserId);
+      log.trace(`>>> Call start ringing: ${  callId  } for ${  currentUserId}`);
       // if not rnging or ring flag too old (for cases of crashed browser page w/o work in process.always below)
       localStorage.setItem(
         ringId,
@@ -135,14 +135,14 @@ export function initCallPopup(
       ); // set it quick as possible to avoid race conditions
     } else {
       playRingtone = false;
-      log.trace(">>> Call already ringing: " + callId + " for " + currentUserId);
+      log.trace(`>>> Call already ringing: ${  callId  } for ${  currentUserId}`);
     }
   }
   
   return exoi18n.loadLanguageAsync(lang, url).then((i18n) => {
-    const container = document.createElement("div");
-    const parentContainer = document.getElementById("vuetify-apps");
-    parentContainer.parentElement.classList.add("call-popup");
+    const container = document.createElement('div');
+    const parentContainer = document.getElementById('vuetify-apps');
+    parentContainer.parentElement.classList.add('call-popup');
     // TODO why we need an ID unique per page?
     document.body.appendChild(container);
     let onAccepted;
@@ -164,7 +164,7 @@ export function initCallPopup(
       },
       mounted() {
         autoRejectId = setTimeout(() => {
-          log.info("Auto rejected the call: " + callId + " user: " + currentUserId);
+          log.info(`Auto rejected the call: ${  callId  } user: ${  currentUserId}`);
           doReject();
         }, 60000); // Reject automatically calls in 60 seconds if the user hasn't answered
       },
@@ -186,7 +186,7 @@ export function initCallPopup(
           }
         });
       }
-    })
+    });
     function doAccept() {
       closeCallPopup(callId);
       if (onAccepted) {
