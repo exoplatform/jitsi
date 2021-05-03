@@ -23,6 +23,7 @@
          <include>org.exoplatform.addons.jitsi:web-conferencing-jitsi-*:jar</include>
        </includes>
        <scope>provided</scope>
+       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
        <fileMode>0644</fileMode>
      </dependencySet>
    </dependencySets>
