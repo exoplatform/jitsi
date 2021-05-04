@@ -6,12 +6,8 @@
 # Default excludes
 #
 
-# eXo server symlink
-webapp/exo-server
-
 # Node,js stuff
-webapp/node_modules/
-package-lock.json
+node_modules/
 
 # Binaries
 *.7z

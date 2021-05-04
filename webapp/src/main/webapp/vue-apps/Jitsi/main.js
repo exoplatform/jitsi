@@ -16,10 +16,15 @@ const url = `${eXo.env.portal.context}/${eXo.env.portal.rest}/i18n/bundle/${loca
 export function init(settings) {
   // getting locale ressources
   exoi18n.loadLanguageAsync(lang, url).then(i18n => {
+    const props = Object.assign({}, settings, {
+      i18n: i18n,
+      language: lang,
+      resourceBundleName: resourceBundleName,
+    });
     // init Vue app when locale ressources are ready
     new Vue({
       render: h =>
-        h(Jitsi, { props: {...settings, i18n: i18n, language: lang, resourceBundleName: resourceBundleName } }),
+        h(Jitsi, {props}),
       i18n,
       vuetify
     }).$mount('#Jitsi');
