@@ -281,12 +281,10 @@
             } else {
               process.reject(err);
               log.error("Failed to get call info: " + callId, err);
-              webConferencing.showError("Getting call error", webConferencing.errorText(err));
             }
           } else {
             process.reject();
             log.error("Failed to get call info: " + callId);
-            webConferencing.showError("Getting call error", "Error read call information from the server");
           }
         });
         return process.promise();
