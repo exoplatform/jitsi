@@ -41,6 +41,7 @@
     <module>webapp</module>
     <module>packaging</module>
   </modules>
+
   <scm>
     <connection>scm:git:git://github.com/exo-addons/jitsi.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/exo-addons/jitsi.git</developerConnection>
