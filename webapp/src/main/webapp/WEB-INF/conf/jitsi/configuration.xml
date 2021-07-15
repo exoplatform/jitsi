@@ -50,19 +50,7 @@
       </init-params>
     </component-plugin>
   </external-component-plugins>
-  
-  <!-- 
-    IM type for user profile settings. 
-  -->
-  <external-component-plugins>
-    <target-component>org.exoplatform.social.webui.profile.settings.UserProfileRenderingService</target-component>
-    <component-plugin>
-      <name>profile-im-control-jitsi</name>
-      <set-method>addIMControl</set-method>
-      <type>org.exoplatform.webconferencing.jitsi.profile.webui.JitsiIMRenderer</type>
-    </component-plugin>
-  </external-component-plugins>
-  
+
   <!-- Add Jitsi portlet to portal pages with a toolbar -->
   <external-component-plugins>
     <target-component>org.exoplatform.commons.addons.AddOnService</target-component>
