@@ -333,13 +333,14 @@
                   // Start the call explicitly if it is in stopped state or state undefined/null.
                   // This way we will inform all parties about the call start.
                   log.info("Call exists but stopped. Starting call: " + callId);
-                  webConferencing.updateCall(callId, "started").then(call => {
+                  let callUpdate = webConferencing.updateCall(callId, "started");
+                  if (callUpdate) {
                     log.info("Call started: " + callId + " by " + context.currentUser.id);
-                    callProcess.resolve(call);
-                  }).catch(err => {
+                    callProcess.resolve(callUpdate);
+                  } else {
                     log.error("Failed to start a call: " + callId, err);
                     callProcess.reject("Failed to start a call: " + webConferencing.errorText(err));
-                  });
+                  }
                 } else {
                   // otherwise, call already running and no need to send notification to its parties
                   log.info("Call already running. Joining call: " + callId);
