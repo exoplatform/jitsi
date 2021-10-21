@@ -141,8 +141,6 @@ export function initCallPopup(
   
   return exoi18n.loadLanguageAsync(lang, url).then((i18n) => {
     const container = document.createElement('div');
-    const parentContainer = document.getElementById('vuetify-apps');
-    parentContainer.parentElement.classList.add('call-popup');
     // TODO why we need an ID unique per page?
     document.body.appendChild(container);
     let onAccepted;
