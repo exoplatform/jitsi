@@ -280,13 +280,11 @@
               process.resolve("stopped");
             } else {
               process.reject(err);
-              log.error("Failed to get call info: " + callId, err);
-              webConferencing.showError("Getting call error", webConferencing.errorText(err));
+              log.error("Failed to get call info: " + callId + " For user " + context.currentUser.id, JSON.stringify(err));
             }
           } else {
             process.reject();
-            log.error("Failed to get call info: " + callId);
-            webConferencing.showError("Getting call error", "Error read call information from the server");
+            log.error("Failed to get call info: " + callId + "For user " + context.currentUser.id);
           }
         });
         return process.promise();
