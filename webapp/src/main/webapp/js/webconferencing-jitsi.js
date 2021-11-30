@@ -131,6 +131,10 @@
         return window.slugify("p_" + callMembersAsc.join("-"));
       };
 
+      var message = function (key) {
+        return settings ? settings.messages["UICallPopup.label" + key] : "";
+      };
+
       /**
        * Creates callId for given context and target. Method for internal use when the target (details of the context) already fetched.
        */
@@ -510,7 +514,7 @@
                     var callerLink = call.owner.profileLink;
                     var callerAvatar = call.owner.avatarLink;
                     const styledOwnerTitle = call.owner.title.bold();
-                    var callerMessage = !isGroup ? styledOwnerTitle + " started a Meeting with you." : "A meeting has started in the room " + styledOwnerTitle;
+                    var callerMessage = !isGroup ? styledOwnerTitle + " " + message("meetingWithYou") : message("meetingInTheRoom") + " " + styledOwnerTitle;
                     call.title = call.owner.title; // for callee the call
                     // Check if current user not already in the call (joined)
                     let canJoinCall = true;
