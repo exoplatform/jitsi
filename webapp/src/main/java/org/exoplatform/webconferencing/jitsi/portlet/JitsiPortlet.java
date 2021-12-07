@@ -19,6 +19,7 @@
 package org.exoplatform.webconferencing.jitsi.portlet;
 
 import static org.exoplatform.webconferencing.Utils.asJSON;
+import static org.exoplatform.webconferencing.Utils.getResourceMessages;
 
 import java.io.IOException;
 
@@ -75,7 +76,9 @@ public class JitsiPortlet extends GenericPortlet {
     if (this.provider != null) {
       try {
         // If we have settings to send to a client side
-        String settingsJson = asJSON(provider.getSettings());
+        JitsiProvider.JitsiSettings settings = provider.getSettings();
+        settings.addMessages(getResourceMessages("locale.jitsi.Jitsi", request.getLocale()));
+        String settingsJson = asJSON(settings);
         JavascriptManager js = ((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).getJavascriptManager();
         // first load Web Conferencing itself,
         js.require("SHARED/webConferencing", "webConferencing")

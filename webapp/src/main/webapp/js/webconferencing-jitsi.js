@@ -132,7 +132,7 @@
       };
 
       var message = function (key) {
-        return settings ? settings.messages["UICallPopup.label" + key] : "";
+        return settings ? settings.messages["UICallPopup.label." + key] : "";
       };
 
       /**
