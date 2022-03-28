@@ -200,7 +200,7 @@ export default {
         &:hover {
           button:hover {
             i {
-              color: var(--allPagesGreyColorLighten1, #a8b3c5);
+              color: var(--allPagesGreyColorLighten1, #5f708a);
             }
           }
         }
