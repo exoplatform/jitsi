@@ -8,7 +8,7 @@ const vuetify = new Vuetify({
 });
 
 // getting language of user
-const lang = (eXo && eXo.env && eXo.env.portal && eXo.env.portal.language) || 'en';
+const lang = (window.eXo && window.eXo.env && window.eXo.env.portal && window.eXo.env.portal.language) || 'en';
 const localePortlet = 'locale.webconferencing';
 const resourceBundleName = 'Jitsi';
 const url = `${eXo.env.portal.context}/${eXo.env.portal.rest}/i18n/bundle/${localePortlet}.${resourceBundleName}-${lang}.json`;
