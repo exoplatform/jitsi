@@ -5,7 +5,7 @@ Vue.component('jitsi-meet-button', JitsiMeetButton);
 const vuetify = new Vuetify(eXo.env.portal.vuetifyPreset);
 
 // getting language of user
-const lang = (eXo && eXo.env && eXo.env.portal && eXo.env.portal.language) || 'en';
+const lang = (window.eXo && eXo.env && eXo.env.portal && eXo.env.portal.language) || 'en';
 const localePortlet = 'locale.jitsi';
 const resourceBundleName = 'Jitsi';
 const url = `${eXo.env.portal.context}/${eXo.env.portal.rest}/i18n/bundle/${localePortlet}.${resourceBundleName}-${lang}.json`;
