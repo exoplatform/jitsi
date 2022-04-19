@@ -31,7 +31,7 @@
 
   <groupId>org.exoplatform.addons.jitsi</groupId>
   <artifactId>exo-jitsi</artifactId>
-  <version>1.3.x-SNAPSHOT</version>
+  <version>1.3.x-maintenance-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>eXo Jitsi</name>
   <description>eXo Jitsi portal extension (connector for Web Conferencing)</description>
@@ -53,9 +53,9 @@
     <!-- **************************************** -->
     <!-- Dependencies versions                    -->
     <!-- **************************************** -->
-    <addon.exo.web-conferencing.version>2.4.x-SNAPSHOT</addon.exo.web-conferencing.version>
-    <addon.exo.ecms.version>6.4.x-SNAPSHOT</addon.exo.ecms.version>
-    <org.exoplatform.platform-ui.version>6.4.x-SNAPSHOT</org.exoplatform.platform-ui.version>
+    <addon.exo.web-conferencing.version>2.4.x-maintenance-SNAPSHOT</addon.exo.web-conferencing.version>
+    <addon.exo.ecms.version>6.4.x-maintenance-SNAPSHOT</addon.exo.ecms.version>
+    <org.exoplatform.platform-ui.version>6.4.x-maintenance-SNAPSHOT</org.exoplatform.platform-ui.version>
     <!-- **************************************** -->
     <spring-boot.version>2.3.3.RELEASE</spring-boot.version>
   
