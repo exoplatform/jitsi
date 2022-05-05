@@ -12,7 +12,7 @@
         width="430">
         <v-card>
           <v-avatar
-            color="#578dc9"
+            color="#476A9C"
             width="70"
             height="70">
             <img :src="avatar" :alt="caller">
