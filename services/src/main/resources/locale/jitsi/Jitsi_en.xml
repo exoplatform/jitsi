@@ -2,7 +2,7 @@
 <bundle>
   <UICallButton>
     <label>
-      <jitsi>Jitsi Call</jitsi>
+      <jitsi>Call</jitsi>
       <join>Join</join>
       <joined>On air</joined>
     </label>
