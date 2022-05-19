@@ -1,13 +1,20 @@
 <template>
-  <v-btn
-    ref="jitsi"
-    :ripple="false"
-    class="jitsiCallAction btn"
-    outlined
-    @click.stop.prevent="startCall">
-    <i :class="buttonTitle.icon" class="uiIconSocPhone uiIconBlue"></i>
+  <v-tooltip bottom>
+    <template v-slot:activator="{ on, attrs }">
+      <v-btn
+        ref="jitsi"
+        :ripple="false"
+        class="jitsiCallAction"
+        outlined
+        @click.stop.prevent="startCall"
+        v-bind="attrs"
+        v-on="on">
+        <i :class="buttonTitle.icon" class="uiIconSocPhone uiIconBlue ps-2"></i>
+        <span>{{ buttonTitle.title }}</span>
+      </v-btn>
+    </template>
     <span>{{ buttonTitle.title }}</span>
-  </v-btn>
+  </v-tooltip>
 </template>
 
 <script>
@@ -77,7 +84,7 @@ export default {
     generateButtonTitle: function(label, defaultText, icon) {
       if (this.parentClasses) {
         return {
-          title: !this.parentClasses.includes('call-button-mini')
+          title: this.parentClasses.includes('call-button-mini')
             ? this.i18n.te(label)
               ? this.$t(label)
               : defaultText
@@ -192,6 +199,14 @@ export default {
             .v-btn {
               padding: 0px;
               vertical-align: baseline;
+            }
+            &:hover {
+               .v-btn {
+                 color: white!important;
+                 i.uiIconSocPhone {
+                   color: white!important;
+                 }
+               }
             }
           }
         }
