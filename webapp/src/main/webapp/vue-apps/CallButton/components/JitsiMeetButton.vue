@@ -299,7 +299,7 @@ export default {
   .jitsiCallAction {
     &.btn:first-child {
       [class^="uiIcon"] {
-        color: var(--allPagesPrimaryColor, #578dc9);
+        color: var(--allPagesPrimaryColor, #476A9C);
       }
     }
   }
