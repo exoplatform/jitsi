@@ -84,7 +84,7 @@ export default {
     generateButtonTitle: function(label, defaultText, icon) {
       if (this.parentClasses) {
         return {
-          title: this.parentClasses.includes('call-button-mini')
+          title: this.parentClasses.includes('call-button-mini') || this.parentClasses.includes('call-button')
             ? this.i18n.te(label)
               ? this.$t(label)
               : defaultText
