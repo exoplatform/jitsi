@@ -2,17 +2,17 @@
 <bundle>
   <UICallButton>
     <label>
-      <jitsi>crwdns6966932:0crwdne6966932:0</jitsi>
-      <join>crwdns6966934:0crwdne6966934:0</join>
-      <joined>crwdns6966936:0crwdne6966936:0</joined>
+      <jitsi>Call</jitsi>
+      <join>Join</join>
+      <joined>On air</joined>
     </label>
   </UICallButton>
   <UICallPopup>
     <label>
-      <join>crwdns6966982:0crwdne6966982:0</join>
-      <ignore>crwdns6966984:0crwdne6966984:0</ignore>
-      <meetingWithYou>crwdns7015595:0crwdne7015595:0</meetingWithYou>
-      <meetingInTheRoom>crwdns7015597:0crwdne7015597:0</meetingInTheRoom>
+      <join>Join</join>
+      <ignore>Ignore</ignore>
+      <meetingWithYou>started a Meeting with you</meetingWithYou>
+      <meetingInTheRoom>A meeting has started in the room</meetingInTheRoom>
     </label>
   </UICallPopup>
 </bundle>
