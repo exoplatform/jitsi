@@ -4,15 +4,15 @@
     <label>
       <jitsi>Anrufen</jitsi>
       <join>Beitreten</join>
-      <joined>On air</joined>
+      <joined>auf Sendung</joined>
     </label>
   </UICallButton>
   <UICallPopup>
     <label>
       <join>Beitreten</join>
       <ignore>Ignorieren</ignore>
-      <meetingWithYou>started a Meeting with you</meetingWithYou>
-      <meetingInTheRoom>A meeting has started in the room</meetingInTheRoom>
+      <meetingWithYou>hat ein Meeting mit Ihnen begonnen</meetingWithYou>
+      <meetingInTheRoom>Ein Meeting hat im Projektraum begonnen</meetingInTheRoom>
     </label>
   </UICallPopup>
 </bundle>
