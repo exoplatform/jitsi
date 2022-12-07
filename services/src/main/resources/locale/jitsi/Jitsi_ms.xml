@@ -10,7 +10,7 @@
   <UICallPopup>
     <label>
       <join>Join</join>
-      <ignore>Abaikan</ignore>
+      <ignore>Ignore</ignore>
       <meetingWithYou>started a Meeting with you</meetingWithYou>
       <meetingInTheRoom>A meeting has started in the room</meetingInTheRoom>
     </label>

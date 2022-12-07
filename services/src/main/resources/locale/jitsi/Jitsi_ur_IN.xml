@@ -3,14 +3,14 @@
   <UICallButton>
     <label>
       <jitsi>Call</jitsi>
-      <join>شامل ہوں</join>
+      <join>Join</join>
       <joined>On air</joined>
     </label>
   </UICallButton>
   <UICallPopup>
     <label>
-      <join>شامل ہوں</join>
-      <ignore>نظرانداز کریں</ignore>
+      <join>Join</join>
+      <ignore>Ignore</ignore>
       <meetingWithYou>started a Meeting with you</meetingWithYou>
       <meetingInTheRoom>A meeting has started in the room</meetingInTheRoom>
     </label>

@@ -2,15 +2,15 @@
 <bundle>
   <UICallButton>
     <label>
-      <jitsi>Chamada</jitsi>
-      <join>Juntar-se</join>
+      <jitsi>Call</jitsi>
+      <join>Join</join>
       <joined>On air</joined>
     </label>
   </UICallButton>
   <UICallPopup>
     <label>
-      <join>Juntar-se</join>
-      <ignore>Ignorar</ignore>
+      <join>Join</join>
+      <ignore>Ignore</ignore>
       <meetingWithYou>started a Meeting with you</meetingWithYou>
       <meetingInTheRoom>A meeting has started in the room</meetingInTheRoom>
     </label>
