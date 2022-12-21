@@ -2,15 +2,15 @@
 <bundle>
   <UICallButton>
     <label>
-      <jitsi>Call</jitsi>
-      <join>Join</join>
+      <jitsi>通話</jitsi>
+      <join>参加</join>
       <joined>On air</joined>
     </label>
   </UICallButton>
   <UICallPopup>
     <label>
-      <join>Join</join>
-      <ignore>Ignore</ignore>
+      <join>参加</join>
+      <ignore>無視</ignore>
       <meetingWithYou>started a Meeting with you</meetingWithYou>
       <meetingInTheRoom>A meeting has started in the room</meetingInTheRoom>
     </label>

@@ -2,8 +2,8 @@
 <bundle>
   <UICallButton>
     <label>
-      <jitsi>Call</jitsi>
-      <join>Join</join>
+      <jitsi>Appel</jitsi>
+      <join>Rejoindre</join>
       <joined>En cours</joined>
     </label>
   </UICallButton>
