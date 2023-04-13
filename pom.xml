@@ -53,9 +53,9 @@
     <!-- **************************************** -->
     <!-- Dependencies versions                    -->
     <!-- **************************************** -->
-    <addon.exo.web-conferencing.version>2.5.x-SNAPSHOT</addon.exo.web-conferencing.version>
-    <addon.exo.ecms.version>6.5.x-SNAPSHOT</addon.exo.ecms.version>
-    <org.exoplatform.platform-ui.version>6.5.x-exo-SNAPSHOT</org.exoplatform.platform-ui.version>
+    <addon.exo.web-conferencing.version>2.5.0-20230413</addon.exo.web-conferencing.version>
+    <addon.exo.ecms.version>6.5.0-20230413</addon.exo.ecms.version>
+    <org.exoplatform.platform-ui.version>6.5.0-exo-20230413</org.exoplatform.platform-ui.version>
     <!-- **************************************** -->
     <spring-boot.version>2.3.3.RELEASE</spring-boot.version>
   
