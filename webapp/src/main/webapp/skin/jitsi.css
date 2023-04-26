@@ -7,3 +7,10 @@
 .spaceCall i.uiIconJitsiCall {
 	font-size: 14px;
 }
+.incoming-dialog {
+  border: 1px solid #aeb3b7;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 0px 10px 10px !important;
+}
