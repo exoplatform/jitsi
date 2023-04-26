@@ -145,17 +145,6 @@ export default {
   flex-grow: unset !important;
   width: 12%;
 }
-//.theme--light.v-card > .v-card__text
-.v-dialog__content {
-  justify-content: center;
-  left: unset;
-  position: static;
-  margin: 0px 10px 20px;
-  height: fit-content;
-  width: fit-content;
-  height: -moz-fit-content;
-  width: -moz-fit-content;
-}
 .v-dialog {
   border-radius: 2px;
   height: 160px;
@@ -249,26 +238,3 @@ export default {
 // }
 </style>
 
-<style>
-#vuetify-apps {
-  display: flex;
-  flex-flow: column;
-  align-items: flex-end;
-  justify-content: flex-end;
-  width: 100%;
-  min-height: calc(100vh - 57px);
-}
-.incoming-dialog {
-  border: 1px solid #aeb3b7;
-}
-.VuetifyApp.call-popup {
-  position: fixed;
-  height: 100vh;
-  padding-left: 77px;
-  margin-top: 57px;
-  overflow-y: hidden;
-  z-index: 70;
-  right: 0px;
-  pointer-events: none;
-}
-</style>
