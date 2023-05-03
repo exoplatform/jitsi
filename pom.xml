@@ -23,9 +23,9 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>addons-parent-pom</artifactId>
+    <artifactId>addons-parent-exo-pom</artifactId>
     <groupId>org.exoplatform.addons</groupId>
-    <version>17-exo-M01</version>
+    <version>17-security-fix-SNAPSHOT</version>
     <relativePath></relativePath>
   </parent>
 
@@ -54,8 +54,6 @@
     <!-- Dependencies versions                    -->
     <!-- **************************************** -->
     <addon.exo.web-conferencing.version>2.5.x-SNAPSHOT</addon.exo.web-conferencing.version>
-    <addon.exo.ecms.version>6.5.x-SNAPSHOT</addon.exo.ecms.version>
-    <org.exoplatform.platform-ui.version>6.5.x-exo-SNAPSHOT</org.exoplatform.platform-ui.version>
     <!-- **************************************** -->
     <spring-boot.version>2.3.3.RELEASE</spring-boot.version>
   
@@ -67,25 +65,11 @@
     <dependencies>
       <!-- Import versions from platform project -->
       <dependency>
-        <groupId>org.exoplatform.ecms</groupId>
-        <artifactId>ecms</artifactId>
-        <version>${addon.exo.ecms.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.platform-ui</groupId>
-        <artifactId>platform-ui</artifactId>
-        <version>${org.exoplatform.platform-ui.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <!-- Web Conferencing extension -->
-      <dependency>
         <groupId>org.exoplatform.addons.web-conferencing</groupId>
-        <artifactId>web-conferencing-services</artifactId>
+        <artifactId>web-conferencing</artifactId>
         <version>${addon.exo.web-conferencing.version}</version>
-        <type>jar</type>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
       <!-- My Connector -->
       <dependency>
