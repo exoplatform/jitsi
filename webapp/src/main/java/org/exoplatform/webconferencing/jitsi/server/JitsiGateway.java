@@ -154,7 +154,7 @@ public class JitsiGateway extends AbstractHttpServlet {
     } else {
       HttpPost post = new HttpPost(requestUrl);
       try {
-        post.setEntity(new InputStreamEntity(req.getInputStream(), ContentType.create(req.getContentType())));
+        post.setEntity(new InputStreamEntity(req.getInputStream(), ContentType.parse(req.getContentType())));
       } catch (IOException e) {
         LOG.warn("Cannot set entity for post request  {} : {} ", requestUrl, e.getMessage());
       }
