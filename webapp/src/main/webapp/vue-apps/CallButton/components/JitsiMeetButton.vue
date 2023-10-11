@@ -1,20 +1,15 @@
 <template>
-  <v-tooltip bottom>
-    <template v-slot:activator="{ on, attrs }">
-      <v-btn
-        ref="jitsi"
-        :ripple="false"
-        class="jitsiCallAction"
-        outlined
-        @click.stop.prevent="startCall"
-        v-bind="attrs"
-        v-on="on">
-        <i :class="buttonTitle.icon" class="uiIconSocPhone uiIconBlue ps-2"></i>
-        <span>{{ buttonTitle.title }}</span>
-      </v-btn>
-    </template>
+  <v-btn
+    id="btnJitsiButton"
+    class="jitsiCallAction"
+    :title="buttonTitle.title"
+    @click.stop.prevent="startCall"
+    v-bind="attrs"
+    v-on="on"
+    icon>
+    <v-icon size="16" class="uiIconStatus icon-default-color fas fa-phone" />
     <span>{{ buttonTitle.title }}</span>
-  </v-tooltip>
+  </v-btn>
 </template>
 
 <script>
@@ -121,18 +116,6 @@ export default {
       opacity: 0;
       background: transparent;
     }
-    &:hover {
-      &::before {
-        color: @primaryColor;
-        opacity: 0;
-      }
-      // i {
-      // color: white;
-      // }
-      // span {
-      // color: white;
-      // }
-    }
   }
   .call-button-container {
     button {
@@ -151,6 +134,23 @@ export default {
           span {
             color: unset;
           }
+        }
+      }
+    }
+  }
+}
+#chat-application {
+  .call-button-container {
+    .theme--light.v-btn {
+      background: inherit;
+      &:focus::before {
+        opacity: 0;
+        background: transparent;
+      }
+      &:hover {
+        &::before {
+          color: @primaryColor;
+          opacity: 0;
         }
       }
     }
