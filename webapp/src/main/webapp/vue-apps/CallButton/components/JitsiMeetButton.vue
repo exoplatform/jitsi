@@ -60,7 +60,6 @@ export default {
       return this.callSettings.context.parentClasses;
     },
     displayTooltip: function() {
-      console.log('test');
       return this.parentClasses.includes('call-button-mini');
     },
     buttonTitle: function() {
