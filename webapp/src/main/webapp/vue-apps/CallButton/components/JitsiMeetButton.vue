@@ -1,15 +1,26 @@
 <template>
-  <v-btn
-    id="btnJitsiButton"
-    class="jitsiCallAction"
-    :title="buttonTitle.title"
-    @click.stop.prevent="startCall"
-    v-bind="attrs"
-    v-on="on"
-    icon>
-    <v-icon size="16" class="uiIconStatus icon-default-color fas fa-phone" />
-    <span>{{ buttonTitle.title }}</span>
-  </v-btn>
+  <div>
+    <v-tooltip bottom :disabled="!displayTooltip">
+      <template #activator="{ on, attrs }">
+        <v-btn
+          id="btnJitsiButton"
+          class="jitsiCallAction"
+          @click.stop.prevent="startCall"
+          v-bind="attrs"
+          v-on="on"
+          icon>
+          <v-icon
+            size="16"
+            class="uiIconStatus fas fa-phone"
+            :color="buttonColor"
+           />
+        </v-btn>
+      </template>
+      <span v-if="displayTooltip">{{ buttonTitle.title }}</span>
+    </v-tooltip>
+    <span v-if="!displayTooltip"
+      @click.stop.prevent="startCall">{{ buttonTitle.title }}</span>
+  </div>
 </template>
 
 <script>
@@ -48,6 +59,9 @@ export default {
     parentClasses: function() {
       return this.callSettings.context.parentClasses;
     },
+    displayTooltip: function() {
+      return this.parentClasses.includes('call-button-mini');
+    },
     buttonTitle: function() {
       if (this.callState === 'joined') {
         return this.generateButtonTitle('UICallButton.label.joined',
@@ -62,6 +76,16 @@ export default {
           'Call',
           'uiIconCallStart');
       }
+    },
+    buttonColor: function() {
+      if (this.callState === 'joined') {
+        return '#2eb58c';
+      } else if (this.callState === 'started' || this.callState === 'leaved') {
+        return '#fb8e18';
+      } else {
+        return '';
+      }
+
     }
   },
   created() {
@@ -158,32 +182,6 @@ export default {
 }
 .jitsiCallAction {
   color: var(--allPagesDarkGrey, #4d5466) !important;
-  .uiIconSocPhone {
-    &:before {
-      content: "\e92b";
-      height: 16px;
-      width: 16px;
-      margin-right: 4px;
-    }
-    &.uiIconCallStart {
-      &:before {
-        color: unset;
-        content: "\e92b";
-      }
-    }
-    &.uiIconCallJoin {
-      &:before {
-        content: "\E61C";
-        color: #fb8e18;
-      }
-    }
-    &.uiIconCallJoined {
-      &:before {
-        color: #2eb58c;
-        content: "\e92b";
-      }
-    }
-  }
 }
 .call-button-mini {
   .VuetifyApp {
@@ -311,6 +309,11 @@ export default {
         height: inherit;
       }
     }
+  }
+}
+.jitsiCallAction {
+  .v-btn__content {
+    justify-content:center;
   }
 }
 </style>
