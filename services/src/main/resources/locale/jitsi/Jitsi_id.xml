@@ -2,17 +2,17 @@
 <bundle>
   <UICallButton>
     <label>
-      <jitsi>Call</jitsi>
-      <join>Join</join>
-      <joined>On air</joined>
+      <jitsi>Panggil</jitsi>
+      <join>Gabung</join>
+      <joined>sedang tayang</joined>
     </label>
   </UICallButton>
   <UICallPopup>
     <label>
-      <join>Join</join>
-      <ignore>Ignore</ignore>
-      <meetingWithYou>started a Meeting with you</meetingWithYou>
-      <meetingInTheRoom>A meeting has started in the room</meetingInTheRoom>
+      <join>Gabung</join>
+      <ignore>Abaikan</ignore>
+      <meetingWithYou>Memulai meeting dengan Anda.</meetingWithYou>
+      <meetingInTheRoom>Meeting telah dimulai di ruangan.</meetingInTheRoom>
     </label>
   </UICallPopup>
 </bundle>
