@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bundle>
+  <UICallButton>
+    <label>
+      <jitsi>Panggil</jitsi>
+      <join>Gabung</join>
+      <joined>sedang tayang</joined>
+    </label>
+  </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>Gabung</join>
+      <ignore>Abaikan</ignore>
+      <meetingWithYou>Memulai meeting dengan Anda.</meetingWithYou>
+      <meetingInTheRoom>Meeting telah dimulai di ruangan.</meetingInTheRoom>
+    </label>
+  </UICallPopup>
+</bundle>
