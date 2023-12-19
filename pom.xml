@@ -53,7 +53,7 @@
     <!-- **************************************** -->
     <!-- Dependencies versions                    -->
     <!-- **************************************** -->
-    <addon.exo.web-conferencing.version>2.5.x-SNAPSHOT</addon.exo.web-conferencing.version>
+    <addon.exo.web-conferencing.version>2.5.0-20231218</addon.exo.web-conferencing.version>
     <!-- **************************************** -->
     <spring-boot.version>2.3.3.RELEASE</spring-boot.version>
   
