@@ -1,12 +1,18 @@
 package org.exoplatform.webconferencing.jitsi.rest;
 
 import static org.exoplatform.webconferencing.Utils.getCurrentContext;
+import static org.exoplatform.webconferencing.Utils.getResourceMessages;
 
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.security.RolesAllowed;
 import javax.jcr.RepositoryException;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -19,7 +25,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
+import org.exoplatform.webconferencing.CallProvider;
+import org.exoplatform.webconferencing.client.ErrorInfo;
 import org.gatein.portal.controller.resource.ResourceRequestHandler;
 
 import org.exoplatform.services.jcr.RepositoryService;
@@ -180,6 +189,45 @@ public class JitsiContextResource implements ResourceContainer {
                    .type(MediaType.APPLICATION_JSON)
                    .build();
 
+  }
+  @GET
+  @RolesAllowed("administrators")
+  @Path("/connectorsettings")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Operation(
+      summary = "Read Jisti connector settings",
+      method = "GET",
+      description = "Use this method to read Jisti connecotr settings. This operation only available to Administrator user.")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled. Settings object returned."),
+      @ApiResponse(responseCode = "401", description = "Unauthorized user (conversation state not present). Error code: " + ErrorInfo.CODE_ACCESS_ERROR),
+      @ApiResponse(responseCode = "404", description = "Provider (Jisti) not found. Error code: " + ErrorInfo.CODE_NOT_FOUND_ERROR),
+      @ApiResponse(responseCode = "500", description = "Internal server error due to data encoding or formatting result to JSON. Error code: " + ErrorInfo.CODE_SERVER_ERROR)})
+  public Response getConnectorSettings(@Context UriInfo uriInfo, @Context HttpServletRequest request) {
+    ConversationState convo = ConversationState.getCurrent();
+    if (convo != null) {
+      String currentUserName = convo.getIdentity().getUserId();
+      try {
+        JitsiProvider jitsi = (JitsiProvider) webconferencing.getProvider(JitsiProvider.TYPE);
+        if (jitsi != null) {
+          CallProvider.Settings settings = jitsi.getSettings();
+          settings.addMessages(getResourceMessages("locale.jitsi.Jitsi", request.getLocale()));
+          return Response.ok().entity(settings).build();
+        } else {
+          return Response.status(Status.NOT_FOUND)
+                         .entity(ErrorInfo.notFoundError("WebRTC provider not found"))
+                         .build();
+        }
+      } catch (Throwable e) {
+        LOG.error("Error getting WebRTC settings by '" + currentUserName + "'", e);
+        return Response.serverError()
+                       .entity(ErrorInfo.serverError("Error getting WebRTC settings"))
+                       .build();
+      }
+    } else {
+      return Response.status(Status.UNAUTHORIZED)
+                     .entity(ErrorInfo.accessError("Unauthorized user"))
+                     .build();
+    }
   }
 
   /**
