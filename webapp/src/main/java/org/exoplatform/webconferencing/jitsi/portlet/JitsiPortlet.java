@@ -84,14 +84,18 @@ public class JitsiPortlet extends GenericPortlet {
         js.require("SHARED/webConferencing", "webConferencing")
           // load our connector module to myProvider variable
           .require("SHARED/webConferencing_jitsi", "jitsi")
-          // check if the variable contains an object to ensure the provider was loaded successfully
-          .addScripts("if (jitsi) { " 
-          // optionally configure the provider with settings (from the server-side)
-              + "jitsi.configure(" + settingsJson + "); "
-              // then add an instance of the provider to the Web Conferencing client
-              + "webConferencing.addProvider(jitsi); "
-              // and force Web Conferencing client update (to update call buttons and related stuff)
-              + "webConferencing.update(); " + "}");
+          .require("SHARED/webConferencingPortlet", "webConferencingPortlet")
+          // check if the variable contains an object to ensure the provider was loaded
+          // successfully
+          .addScripts("async function registerProvider() {" +
+                  "  if (jitsi) { " +
+                  "    await webConferencingPortlet.start();" +
+                  "    jitsi.configure(" + settingsJson + ");" +
+                  "    webConferencing.addProvider(jitsi); " +
+                  "    webConferencing.update(); " +
+                  "  }" +
+                  "}" +
+                  "registerProvider();");
       } catch (Exception e) {
         LOG.error("Error processing Jitsi calls portlet for user " + request.getRemoteUser(), e);
       }

@@ -7,6 +7,7 @@ let config = {
   // can use multiple entry
   entry: {
     jitsi: "./src/main/webapp/vue-apps/Jitsi/main.js",
+    jitsiConnector: "./src/main/webapp/vue-apps/jitsi-connector/main.js",
     callButton: "./src/main/webapp/vue-apps/CallButton/main.js",
   },
   output: {
