@@ -1,4 +1,4 @@
-window.require(['SHARED/webConferencing','SHARED/webConferencing_jitsi'], function(webConferencing,webConferencing_jitsi) {
+window.require(['SHARED/webConferencing','SHARED/webConferencingPortlet','SHARED/webConferencing_jitsi'], function(webConferencing, webConferencingPortlet, webConferencing_jitsi) {
   if (webConferencing_jitsi) {
     fetch(`${eXo.env.portal.context}/${eXo.env.portal.rest}/jitsi/connectorsettings`, {
       credentials: 'include',
@@ -10,6 +10,7 @@ window.require(['SHARED/webConferencing','SHARED/webConferencing_jitsi'], functi
         return resp.json();
       }
     }).then((data) => {
+      webConferencingPortlet.start();
       webConferencing_jitsi.configure(data);
       webConferencing.addProvider(webConferencing_jitsi);
     });
