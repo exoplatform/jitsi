@@ -76,54 +76,59 @@ public class WebconferencingSessionFilter extends AbstractFilter implements Filt
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
     HttpServletRequest req = (HttpServletRequest) request;
     HttpServletResponse resp = (HttpServletResponse) response;
-    if (checkAuthToken(req)) {
-      String webconfToken = getCookie(req, WebConferencingService.SESSION_TOKEN_COOKIE);
-      Claims claims = null;
-      if (webconfToken != null) {
-        try {
-          claims = parseJWT(webconfToken, getWebconferencing().getSecretKey());
-        } catch (Exception e) {
-          LOG.warn("Cannot parse JWT session token from cookie", e.getMessage());
-        }
-      }
-      if (claims != null && claims.containsKey(USERNAME)) {
-        try {
-          String username = String.valueOf(claims.get(USERNAME));
-          if (isActiveUser(username)) {
-            ExoContainer container = getContainer();
-            ExoContainerContext.setCurrentContainer(container);
-            ConversationState state = createState(username);
-            ConversationState.setCurrent(state);
-            SessionProviderService sessionProviders =
-                                                    (SessionProviderService) getContainer().getComponentInstanceOfType(SessionProviderService.class);
+    if (req.getRequestURI().equals("/portal/rest/jitsi/connectorsettings")) {
+      chain.doFilter(req,resp);
+    } else {
 
-            SessionProvider userProvider = new SessionProvider(state);
-            sessionProviders.setSessionProvider(null, userProvider);
-            chain.doFilter(request, response);
-            try {
-              ConversationState.setCurrent(null);
-            } catch (Exception e) {
-              LOG.warn("An error occured while cleaning the ConversationState", e);
-            }
-            try {
-              ExoContainerContext.setCurrentContainer(null);
-            } catch (Exception e) {
-              LOG.warn("An error occured while cleaning the ThreadLocal", e);
-            }
-          } else {
-            LOG.warn("The user {} is not active", username);
-            writeError(resp, HTTPStatus.FORBIDDEN, "The user is not active");
+      if (checkAuthToken(req)) {
+        String webconfToken = getCookie(req, WebConferencingService.SESSION_TOKEN_COOKIE);
+        Claims claims = null;
+        if (webconfToken != null) {
+          try {
+            claims = parseJWT(webconfToken, getWebconferencing().getSecretKey());
+          } catch (Exception e) {
+            LOG.warn("Cannot parse JWT session token from cookie", e.getMessage());
           }
-        } catch (Exception e) {
-          LOG.warn("Cannot set ConversationState based on provided token", e.getMessage());
+        }
+        if (claims != null && claims.containsKey(USERNAME)) {
+          try {
+            String username = String.valueOf(claims.get(USERNAME));
+            if (isActiveUser(username)) {
+              ExoContainer container = getContainer();
+              ExoContainerContext.setCurrentContainer(container);
+              ConversationState state = createState(username);
+              ConversationState.setCurrent(state);
+              SessionProviderService sessionProviders =
+                  (SessionProviderService) getContainer().getComponentInstanceOfType(SessionProviderService.class);
+
+              SessionProvider userProvider = new SessionProvider(state);
+              sessionProviders.setSessionProvider(null, userProvider);
+              chain.doFilter(request, response);
+              try {
+                ConversationState.setCurrent(null);
+              } catch (Exception e) {
+                LOG.warn("An error occured while cleaning the ConversationState", e);
+              }
+              try {
+                ExoContainerContext.setCurrentContainer(null);
+              } catch (Exception e) {
+                LOG.warn("An error occured while cleaning the ThreadLocal", e);
+              }
+            } else {
+              LOG.warn("The user {} is not active", username);
+              writeError(resp, HTTPStatus.FORBIDDEN, "The user is not active");
+            }
+          } catch (Exception e) {
+            LOG.warn("Cannot set ConversationState based on provided token", e.getMessage());
+            chain.doFilter(request, response);
+          }
+        } else {
           chain.doFilter(request, response);
         }
       } else {
-        chain.doFilter(request, response);
+        LOG.warn("The request doesn't contain valid access token for internal auth");
+        writeError(resp, HTTPStatus.UNAUTHORIZED, "The request is not authorized");
       }
-    } else {
-      LOG.warn("The request doesn't contain valid access token for internal auth");
-      writeError(resp, HTTPStatus.UNAUTHORIZED, "The request is not authorized");
     }
 
   }

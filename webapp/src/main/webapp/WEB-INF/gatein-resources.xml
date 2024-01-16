@@ -31,7 +31,7 @@
     <overwrite>true</overwrite>
     <css-priority>1</css-priority>
   </portlet-skin>
-  
+
   <module>
     <name>transliteration</name>
     <load-group>webConferencingJitsiGRP</load-group>
@@ -112,4 +112,20 @@
       <module>eXoVueI18n</module>
     </depends>
   </module>
+
+  <module>
+    <name>jitsiVisioConnector</name>
+    <load-group>webConferencingGRP</load-group>
+    <script>
+      <minify>false</minify>
+      <path>/js/jitsiConnector.bundle.js</path>
+    </script>
+    <depends>
+      <module>webConferencing</module>
+    </depends>
+    <depends>
+      <module>webConferencing_jitsi</module>
+    </depends>
+  </module>
+
 </gatein-resources>
