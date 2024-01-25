@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.exoplatform.addons.jitsi</groupId>
     <artifactId>exo-jitsi</artifactId>
-    <version>1.5.x-SNAPSHOT</version>
+    <version>1.5.0-20240125</version>
   </parent>
   
   <artifactId>web-conferencing-jitsi-packaging</artifactId>
