@@ -18,6 +18,8 @@
  */
 package org.exoplatform.webconferencing.jitsi;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.exoplatform.container.configuration.ConfigurationException;
@@ -26,6 +28,7 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.social.core.profile.settings.IMType;
 import org.exoplatform.social.core.profile.settings.UserProfileSettingsService;
+import org.exoplatform.webconferencing.ActiveCallProvider;
 import org.exoplatform.webconferencing.CallProvider;
 import org.exoplatform.webconferencing.UserInfo.IMInfo;
 
@@ -193,6 +196,11 @@ public class JitsiProvider extends CallProvider {
   public IMInfo getIMInfo(String imId) {
     // TODO here you can validate, extend or do any other IM id preparations
     return new JitsiIMInfo(imId);
+  }
+
+  @Override
+  public List<ActiveCallProvider> getActiveProvidersForSpace(String spaceId) {
+    return new ArrayList<>(List.of(new ActiveCallProvider(TITLE, null, true)));
   }
 
   /**
