@@ -200,7 +200,7 @@ public class JitsiProvider extends CallProvider {
 
   @Override
   public List<ActiveCallProvider> getActiveProvidersForSpace(String spaceId) {
-    return new ArrayList<>(List.of(new ActiveCallProvider(TITLE, null, true)));
+    return new ArrayList<>(List.of(new ActiveCallProvider("", TITLE, null, true)));
   }
 
   /**
