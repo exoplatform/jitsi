@@ -11,14 +11,15 @@
           icon>
           <v-icon
             size="16"
-            class="uiIconStatus fas fa-phone"
-            :color="buttonColor"
-           />
+            :color="buttonColor">
+            fas fa-video
+          </v-icon>
         </v-btn>
       </template>
       <span v-if="displayTooltip">{{ buttonTitle.title }}</span>
     </v-tooltip>
-    <span v-if="!displayTooltip"
+    <span
+      v-if="!displayTooltip"
       @click.stop.prevent="startCall">{{ buttonTitle.title }}</span>
   </div>
 </template>
@@ -83,7 +84,7 @@ export default {
       } else if (this.callState === 'started' || this.callState === 'leaved') {
         return '#fb8e18';
       } else {
-        return '';
+        return 'primary';
       }
 
     }
