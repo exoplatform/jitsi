@@ -2,9 +2,9 @@
 <bundle>
   <UICallButton>
     <label>
-      <jitsi>Appel</jitsi>
-      <join>Rejoindre</join>
-      <joined>En cours</joined>
+      <jitsi>Démarrer un appel</jitsi>
+      <join>Rejoindre un appel</join>
+      <joined>Appel en cours</joined>
     </label>
   </UICallButton>
   <UICallPopup>
