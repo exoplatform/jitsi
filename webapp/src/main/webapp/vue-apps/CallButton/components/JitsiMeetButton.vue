@@ -90,7 +90,7 @@ export default {
       } else if (this.callState === 'started' || this.callState === 'leaved') {
         return '#fb8e18';
       } else {
-        return 'primary';
+        return '';
       }
 
     }
