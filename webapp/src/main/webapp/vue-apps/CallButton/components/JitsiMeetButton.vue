@@ -84,7 +84,7 @@ export default {
       } else if (this.callState === 'started' || this.callState === 'leaved') {
         return '#fb8e18';
       } else {
-        return '';
+        return '#5f708a';
       }
 
     }
