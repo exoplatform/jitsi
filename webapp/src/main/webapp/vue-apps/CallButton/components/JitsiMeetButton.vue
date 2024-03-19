@@ -19,7 +19,10 @@
       <span v-if="displayTooltip">{{ buttonTitle.title }}</span>
     </v-tooltip>
     <span
-      v-if="!displayTooltip"
+      v-if="displayConnectorName"
+      @click.stop.prevent="startCall">{{ 'Jitsi' }}</span>
+    <span
+      v-else-if="!displayTooltip"
       @click.stop.prevent="startCall">{{ buttonTitle.title }}</span>
   </div>
 </template>
@@ -56,6 +59,9 @@ export default {
   computed: {
     callState: function() {
       return this.callSettings.callState;
+    },
+    displayConnectorName() {
+      return document.querySelector('.single-btn-container') === null;
     },
     parentClasses: function() {
       return this.callSettings.context.parentClasses;
@@ -180,9 +186,6 @@ export default {
       }
     }
   }
-}
-.jitsiCallAction {
-  color: var(--allPagesDarkGrey, #4d5466) !important;
 }
 .call-button-mini {
   .VuetifyApp {
