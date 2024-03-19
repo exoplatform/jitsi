@@ -438,7 +438,9 @@
                 });
                 // Resolve with our button - return Vue object here, so it
                 // will be appended to Call Button UI in the Platform
-                button.resolve(comp);
+                const buttonComponents = [];
+                buttonComponents.push(comp);
+                button.resolve(buttonComponents);
               });
             } else {
               const message = "Button type not supported: " + buttonType;
