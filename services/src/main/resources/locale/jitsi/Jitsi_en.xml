@@ -2,9 +2,9 @@
 <bundle>
   <UICallButton>
     <label>
-      <jitsi>Call</jitsi>
-      <join>Join</join>
-      <joined>On air</joined>
+      <jitsi>Start a call</jitsi>
+      <join>Join the call</join>
+      <joined>Call in progress</joined>
     </label>
   </UICallButton>
   <UICallPopup>
