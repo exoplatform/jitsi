@@ -19,19 +19,18 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>addons-exo-parent-pom</artifactId>
     <groupId>org.exoplatform.addons</groupId>
     <version>18-M02</version>
-    <relativePath></relativePath>
+    <relativePath />
   </parent>
 
   <groupId>org.exoplatform.addons.jitsi</groupId>
   <artifactId>exo-jitsi</artifactId>
-  <version>1.5.x-SNAPSHOT</version>
+  <version>1.5.0-20240327</version>
   <packaging>pom</packaging>
   <name>eXo Jitsi</name>
   <description>eXo Jitsi portal extension (connector for Web Conferencing)</description>
@@ -46,7 +45,7 @@
     <connection>scm:git:git://github.com/exo-addons/jitsi.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/exo-addons/jitsi.git</developerConnection>
     <url>https://github.com/exo-addons/jitsi</url>
-    <tag>HEAD</tag>
+    <tag>1.5.0-20240327</tag>
   </scm>
 
   <properties>
