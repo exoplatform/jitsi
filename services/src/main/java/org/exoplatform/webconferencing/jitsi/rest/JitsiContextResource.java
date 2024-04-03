@@ -191,7 +191,7 @@ public class JitsiContextResource implements ResourceContainer {
 
   }
   @GET
-  @RolesAllowed("administrators")
+  @RolesAllowed("users")
   @Path("/connectorsettings")
   @Produces(MediaType.APPLICATION_JSON)
   @Operation(
