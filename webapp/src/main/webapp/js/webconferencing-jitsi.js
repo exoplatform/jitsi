@@ -57,6 +57,13 @@
       };
 
       /**
+      * Must return if the current provider support invited users
+      */
+      this.supportInvitedUsers = function() {
+        return true;
+      };
+
+      /**
        * MUST return all call types supported by a connector.
        */
       this.getSupportedTypes = function() {
@@ -173,7 +180,9 @@
        * Returns call URL (link).
        */
       var getCallUrl = function(callId) {
-        return window.location.protocol + "//" + window.location.host + CALL_URL_PATH + callId;
+        var process = $.Deferred();
+        process.resolve(window.location.protocol + "//" + window.location.host + CALL_URL_PATH + callId);
+        return process.promise();
       };
       this.getCallUrl = getCallUrl;
 
@@ -377,11 +386,13 @@
         // We wait for call readiness and invoke start it in the
         // popup window
         callProcess.then(call => {
-          const callUrl = getCallUrl(callId);
-          if (callWindow.location.href !== callUrl) {
-            callWindow.location = callUrl;
-            callWindow.document.title = call.title; // TODO was target.title
-          }
+          getCallUrl(callId).then((callUrl) => {
+            if (callWindow.location.href !== callUrl) {
+              callWindow.location = callUrl;
+              callWindow.document.title = call.title; // TODO was target.title
+            }
+          });
+
         }).catch(err => {
           callWindow.close();
           setTimeout(() => {
