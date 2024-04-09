@@ -57,6 +57,13 @@
       };
 
       /**
+      * Must return if the current provider support invited users
+      */
+      this.supportInvitedUsers = function() {
+        return true;
+      };
+
+      /**
        * MUST return all call types supported by a connector.
        */
       this.getSupportedTypes = function() {
@@ -173,7 +180,9 @@
        * Returns call URL (link).
        */
       var getCallUrl = function(callId) {
-        return window.location.protocol + "//" + window.location.host + CALL_URL_PATH + callId;
+        var process = $.Deferred();
+        process.resolve(window.location.protocol + "//" + window.location.host + CALL_URL_PATH + callId);
+        return process.promise();
       };
       this.getCallUrl = getCallUrl;
 
