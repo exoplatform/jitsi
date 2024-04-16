@@ -22,23 +22,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.exoplatform.commons.api.settings.SettingValue;
-import org.exoplatform.commons.api.settings.data.Context;
-import org.exoplatform.commons.api.settings.data.Scope;
 import org.exoplatform.container.configuration.ConfigurationException;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.social.core.identity.model.Identity;
-import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.social.core.profile.settings.IMType;
 import org.exoplatform.social.core.profile.settings.UserProfileSettingsService;
-import org.exoplatform.social.core.space.model.Space;
-import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.webconferencing.ActiveCallProvider;
 import org.exoplatform.webconferencing.CallProvider;
 import org.exoplatform.webconferencing.UserInfo.IMInfo;
-import org.exoplatform.commons.api.settings.SettingService;
 
 /**
  * Jitsi provider implementation.
@@ -117,11 +109,6 @@ public class JitsiProvider extends CallProvider {
   /** The connector web-services URL (will be used to generate Call page URLs). */
   protected final String url;
 
-  private SettingService settingsService;
-  private SpaceService    spaceService;
-  private IdentityManager identityManager;
-
-
   /**
    * Instantiates a new JitsiProvider provider.
    *
@@ -129,7 +116,7 @@ public class JitsiProvider extends CallProvider {
    * @param params the params (from configuration.xml)
    * @throws ConfigurationException the configuration exception
    */
-  public JitsiProvider(UserProfileSettingsService profileSettings, InitParams params, SettingService settingService, IdentityManager identityManager, SpaceService spaceService) throws ConfigurationException {
+  public JitsiProvider(UserProfileSettingsService profileSettings, InitParams params) throws ConfigurationException {
     super(params);
     String internalAuthSecret = this.config.get(CONFIG_INTERNAL_AUTH_SECRET);
     if (internalAuthSecret == null || (internalAuthSecret = internalAuthSecret.trim()).length() == 0) {
@@ -153,10 +140,6 @@ public class JitsiProvider extends CallProvider {
       // add plugin programmatically as it's an integral part of the provider
       profileSettings.addIMType(new IMType(TYPE, TITLE));
     }
-
-    this.settingsService = settingService;
-    this.identityManager = identityManager;
-    this.spaceService=spaceService;
   }
 
   /**
@@ -166,8 +149,8 @@ public class JitsiProvider extends CallProvider {
    * @param params the params (from configuration.xml)
    * @throws ConfigurationException the configuration exception
    */
-  public JitsiProvider(InitParams params, SettingService settingService, IdentityManager identityManager, SpaceService spaceService) throws ConfigurationException {
-    this(null, params, settingService, identityManager, spaceService);
+  public JitsiProvider(InitParams params) throws ConfigurationException {
+    this(null, params);
   }
 
   /**
@@ -217,7 +200,7 @@ public class JitsiProvider extends CallProvider {
 
   @Override
   public List<ActiveCallProvider> getActiveProvidersForSpace(String spaceId) {
-    return new ArrayList<>(List.of(new ActiveCallProvider("jitsi", TITLE, null, true, isConfiguredForIdentity(spaceId))));
+    return new ArrayList<>(List.of(new ActiveCallProvider("", TITLE, null, true)));
   }
 
   /**
@@ -261,22 +244,4 @@ public class JitsiProvider extends CallProvider {
     return VERSION;
   }
 
-
-  @Override
-  public void setConfiguredForIdentity(String spaceId, boolean configured) {
-    this.settingsService.set(Context.GLOBAL,
-                             Scope.SPACE.id(spaceId),
-                             String.valueOf(this.getType()),
-                             new SettingValue<>(configured));
-  }
-
-
-  @Override
-  public boolean isConfiguredForIdentity(String spaceId) {
-    SettingValue settingValue = this.settingsService.get(Context.GLOBAL,
-                             Scope.SPACE.id(spaceId),
-                             String.valueOf(this.getType()));
-    return settingValue == null ||Boolean.parseBoolean(settingValue.getValue().toString());
-
-  }
 }
