@@ -489,7 +489,9 @@
        * Returns invite link.
        */
       this.getInviteLink = function(call) {
-        return getCallUrl(call.id) + "?inviteId=" + call.inviteId;
+        return getCallUrl(call.id).then((callUrl) => {
+          return callUrl + "?inviteId=" + call.inviteId;
+        })
       };
 
       /**
