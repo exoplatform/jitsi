@@ -272,11 +272,17 @@ public class JitsiProvider extends CallProvider {
 
 
   @Override
-  public boolean isConfiguredForIdentity(String spaceId) {
-    SettingValue settingValue = this.settingsService.get(Context.GLOBAL,
-                             Scope.SPACE.id(spaceId),
-                             String.valueOf(this.getType()));
-    return settingValue == null ||Boolean.parseBoolean(settingValue.getValue().toString());
+  public boolean isConfiguredForIdentity(String remoteId) {
+    Space space = spaceService.getSpaceByPrettyName(remoteId);
+    if (space!=null) {
+      SettingValue settingValue = this.settingsService.get(Context.GLOBAL,
+                                                           Scope.SPACE.id(space.getId()),
+                                                           String.valueOf(this.getType()));
+      return settingValue == null || Boolean.parseBoolean(settingValue.getValue().toString());
+    } else {
+      //jitsi is always configured for other than spaces
+      return true;
+    }
 
   }
 }
