@@ -552,9 +552,10 @@
                         callButton.initCallPopup(callId, callerId, callerLink, callerAvatar, callerMessage, playRingtone).then(popup => {
                           popup.onAccepted(() => {
                             log.info("Call accepted: " + callId + " by user: " + currentUserId);
-                            const callUrl = getCallUrl(callId);
-                            const callWindow = webConferencing.showCallWindow(callUrl, callWindowName(callId));
-                            callWindow.document.title = call.title;
+                            getCallUrl(callId).then((callUrl) => {
+                              const callWindow = webConferencing.showCallWindow(callUrl, callWindowName(callId));
+                              callWindow.document.title = call.title;
+                            });
                           });
                           popup.onRejected(() => {
                             log.trace("<<< User declined just " + update.callState + " call " + callId);
