@@ -1,16 +1,18 @@
-<?xml version\="1.0" encoding\="UTF-8"?>
-<bundle>=
-<UICallButton>=
-<label>=
-<jitsi>Start a call</jitsi>
-<join>Join the call</join>
-<joined>Call in progress</joined>
-</label>=
-</UICallButton>=
-<UICallPopup>=
-<join>Join</join>=
-<ignore>Ignore</ignore>=
-<meetingWithYou>started a Meeting with you</meetingWithYou>
-<meetingInTheRoom>A meeting has started in the room</meetingInTheRoom>
-</UICallPopup>=
-</bundle>=
+<?xml version="1.0" encoding="UTF-8"?>
+<bundle>
+  <UICallButton>
+    <label>
+      <jitsi>Llamada</jitsi>
+      <join>Unirse</join>
+      <joined>En el aire</joined>
+    </label>
+  </UICallButton>
+  <UICallPopup>
+    <label>
+      <join>Unirse</join>
+      <ignore>Ignorar</ignore>
+      <meetingWithYou>ha iniciado una reunión contigo</meetingWithYou>
+      <meetingInTheRoom>Se ha iniciado una reunión en la sala</meetingInTheRoom>
+    </label>
+  </UICallPopup>
+</bundle>
