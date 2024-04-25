@@ -10,7 +10,7 @@
           v-on="on"
           icon>
           <v-icon
-            size="16"
+            size="20"
             :color="buttonColor">
             fas fa-video
           </v-icon>
@@ -67,7 +67,7 @@ export default {
       return this.callSettings.context.parentClasses;
     },
     displayTooltip: function() {
-      return this.parentClasses.includes('call-button-mini');
+      return this.parentClasses.includes('call-button-mini') && !this.parentClasses.includes('v-list-item--link') ;
     },
     buttonTitle: function() {
       if (this.callState === 'joined') {
@@ -90,7 +90,7 @@ export default {
       } else if (this.callState === 'started' || this.callState === 'leaved') {
         return '#fb8e18';
       } else {
-        return '#5f708a';
+        return '';
       }
 
     }
@@ -159,9 +159,6 @@ export default {
     &.single {
       &:hover {
         button:hover {
-          i {
-            color: @primaryColor;
-          }
           span {
             color: unset;
           }
@@ -214,13 +211,6 @@ export default {
         }
       }
       &.single {
-        &:hover {
-          button:hover {
-            i {
-              color: var(--allPagesGreyColorLighten1, #5f708a);
-            }
-          }
-        }
         .single-btn-container {
           button {
             margin-right: 0;
@@ -292,20 +282,12 @@ export default {
   }
 }
 .call-button--profile, .call-button--chat {
-    .uiIconSocPhone {
-      font-size: 14px;
-      margin-bottom: -2px;
-    }
-  }
-.uiAction {
-  .jitsiCallAction {
-    &.btn:first-child {
-      [class^="uiIcon"] {
-        color: var(--allPagesPrimaryColor, #476A9C);
-      }
-    }
+  .uiIconSocPhone {
+    font-size: 14px;
+    margin-bottom: -2px;
   }
 }
+
 #tiptip_content {
   .connectAction {
     .btn {
@@ -318,6 +300,23 @@ export default {
 .jitsiCallAction {
   .v-btn__content {
     justify-content:center;
+  }
+}
+#peopleCompactCardBottomDrawer {
+  .v-application--is-ltr {
+    .jitsiCallAction {
+      margin-left: 8px;
+      margin-right: 4px;
+    }
+  }
+  .v-application--is-rtl {
+    .jitsiCallAction {
+      margin-left: 4px;
+      margin-right: 8px;
+    }
+  }
+  .single-btn-container {
+    font-size: 0.8125rem;
   }
 }
 </style>
