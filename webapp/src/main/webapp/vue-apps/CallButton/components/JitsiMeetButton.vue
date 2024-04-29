@@ -315,5 +315,8 @@ export default {
       margin-right: 8px;
     }
   }
+  .single-btn-container {
+    font-size: 0.8125rem;
+  }
 }
 </style>
