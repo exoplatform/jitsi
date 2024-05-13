@@ -53,7 +53,9 @@ export default {
     return {
       settings: this.callSettings,
       log: null,
-      callWindow: null
+      callWindow: null,
+      connectorName: false,
+      singleBtn: false
     };
   },
   computed: {
@@ -61,7 +63,7 @@ export default {
       return this.callSettings.callState;
     },
     displayConnectorName() {
-      return document.querySelector('.single-btn-container') === null;
+      return !this.singleBtn;
     },
     parentClasses: function() {
       return this.callSettings.context.parentClasses;
@@ -102,8 +104,19 @@ export default {
   mounted() {
     // Assign target ID to the button for later use on started
     // event in init()
+    const elParent = this.$el.parentNode;
+    if (!elParent) {
+      let parent = this.$parent;
+      while (parent && parent.$el === this.$el) {
+        parent = parent.$parent;
+      }
+    }
+    this.connectorName=document.querySelector('.single-btn-container') === null;
   },
   methods: {
+    setSingleBtn(string) {
+      this.singleBtn = string;
+    },
     startCall: function() {
       this.callSettings.onCallOpen();
     },
@@ -139,7 +152,6 @@ export default {
   }
   .v-btn {
     padding: 0px;
-    justify-content: flex-start;
   }
   .theme--light.v-btn {
     background: inherit;
@@ -197,15 +209,6 @@ export default {
             }
             .v-btn {
               padding: 0px;
-              vertical-align: baseline;
-            }
-            &:hover {
-               .v-btn {
-                 color: white!important;
-                 i.uiIconSocPhone {
-                   color: white!important;
-                 }
-               }
             }
           }
         }
