@@ -48,7 +48,7 @@
     </dependency>
     <!-- Application dependencies-->
     <dependency>
-      <groupId>org.exoplatform.social</groupId>
+      <groupId>io.meeds.social</groupId>
       <artifactId>social-component-core</artifactId>
       <scope>provided</scope>
     </dependency>
