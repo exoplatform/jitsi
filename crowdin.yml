@@ -16,7 +16,7 @@
 #
 files: [
   {
-    "source" : "/services/src/main/resources/locale/jitsi/Jitsi_en.xml",
+    "source" : "/services/src/main/resources/locale/jitsi/Jitsi_en.properties",
 
     "translation" : "%original_path%/%file_name%!_%locale_with_underscore%.%file_extension%",
     "translation_replace" : {
