@@ -45,6 +45,11 @@
       this.groupSupported = true;
 
       /**
+       * With Jitsi Visio, we dont allow to modify event url
+       */
+      this.canModifyEventUrl = false;
+
+      /**
        * MUST return a call type name. If several types supported, this one is
        * assumed as major one and it will be used for referring this connector
        * in getProvider() and similar methods. This type also should listed in
