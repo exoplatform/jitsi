@@ -59,8 +59,16 @@
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>JitsiGateway</servlet-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/</url-pattern>
+    <url-pattern>/meet/*</url-pattern>
+    <url-pattern>/jitsi/js/jitsi-app.bundle.js</url-pattern>
+    <url-pattern>/skin/call.css</url-pattern>
+    <url-pattern>/js/common.js</url-pattern>
+    <url-pattern>/js/require.js</url-pattern>
+    <url-pattern>/js/call.js</url-pattern>
+    <url-pattern>/images/favicon.ico</url-pattern>
+    <url-pattern>/images/logo.png</url-pattern>
+    <url-pattern>/jitsi/portal/rest/*</url-pattern>
   </servlet-mapping>
-
 
 </web-app>
