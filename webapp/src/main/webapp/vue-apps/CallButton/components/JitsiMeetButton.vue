@@ -16,7 +16,7 @@
           </v-icon>
         </v-btn>
       </template>
-      <span v-if="displayTooltip">{{ buttonTitle.title }}</span>
+      <span v-if="displayTooltip" class="buttonTitle">{{ buttonTitle.title }}</span>
     </v-tooltip>
     <span
       v-if="displayConnectorName"
@@ -322,4 +322,21 @@ export default {
     font-size: 0.8125rem;
   }
 }
+#profileHeaderActions .profileHeaderActionComponents {
+  @media (min-width: 960px) {
+    .call-button {
+      margin-right: 8px;
+    }
+  }
+    .jitsiCallAction {
+      color: #476A9C !important;
+      i {
+        font-size: medium !important;
+        margin: 0 !important;
+      }
+    }
+    .buttonTitle {
+      color: inherit;
+    }
+  }
 </style>
