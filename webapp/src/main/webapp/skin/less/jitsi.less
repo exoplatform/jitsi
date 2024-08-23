@@ -1,0 +1,311 @@
+/* Styles for Jitsi in Enterprise Skin */
+@import "./variables.less";
+@import './mixins.less';
+.uiIconSocJitsi:before {
+	content: "\e829";
+}
+
+.spaceCall i.uiIconJitsiCall {
+	font-size: 14px;
+}
+.incoming-dialog {
+  border: 1px solid #aeb3b7;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 0px 10px 10px !important;
+}
+
+/* Styles for Jitsi in callPopup */
+.spacer {
+  flex-grow: unset !important;
+  width: 12%;
+}
+.v-dialog {
+  border-radius: 2px;
+  height: 160px;
+  .v-sheet.v-card {
+    border-radius: 2px;
+    height: 160px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 80px);
+    grid-auto-rows: 10px;
+    width: initial;
+    [class^="uiIcon"].start-call {
+      position: absolute;
+      top: 15%;
+      left: 24%;
+      &::before {
+        content: "\e61c";
+        color: #fb8e18;
+        font-size: 20px;
+      }
+    }
+    .v-avatar {
+      border-radius: 50% !important;
+      align-self: center;
+      justify-self: center;
+      top: 15px;
+      left: -15px;
+    }
+    .v-card__text {
+      grid-column: 2 / span 2;
+      grid-row: 1 / span 1;
+      padding: 20px 15px 20px 0px;
+      font-size: 16px;
+      color: #333;
+    }
+    .v-card__actions {
+      grid-column: 1 / span 3;
+      grid-row: 2 / span 1;
+      padding: 8px 0px !important;
+      display: flex;
+      justify-content: center;
+      .v-btn {
+        padding: 0;
+        height: 50px;
+        width: 50px;
+        border: 1px solid;
+        margin-left: 0px !important;
+        .v-btn__content {
+          [class^="uiIcon"] {
+            position: relative;
+            height: 25px;
+            width: 50px;
+            &::before {
+              position: absolute;
+              font-size: 24px;
+              right: 50%;
+              transform: translateX(50%);
+            }
+          }
+        }
+        &.accept-button {
+          .uiIconPopupPhone {
+            color: white;
+            &::before {
+              content: "\e92b";
+            }
+          }
+        }
+        &.decline-button {
+          //&:before {
+          //  color: transparent;
+          //}
+          .uiIconPopupClose {
+            opacity: 1;
+            &::before {
+              color: #aeb3b7;
+              content: "\e9d2";
+            }
+          }
+        }
+      }
+      .button-title {
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        color: #333;
+      }
+    }
+  }
+}
+
+/* Styles for Jitsi in meet button */
+.VuetifyApp .call-button-container {
+  .v-btn:not(.v-btn--round).v-size--default {
+    padding: 0px;
+    min-width: unset;
+    width: 100%;
+    height: 100%;
+  }
+  .v-btn {
+    padding: 0px;
+  }
+  .theme--light.v-btn {
+    background: inherit;
+    &:focus::before {
+      opacity: 0;
+      background: transparent;
+    }
+  }
+  button {
+    .v-btn__content {
+      letter-spacing: normal;
+      padding: 0 10px;
+      height: 100%;
+    }
+  }
+  &.single {
+    &:hover {
+      button:hover {
+        span {
+          color: unset;
+        }
+      }
+    }
+  }
+}
+#chat-application {
+  .call-button-container {
+    .theme--light.v-btn {
+      background: inherit;
+      &:focus::before {
+        opacity: 0;
+        background: transparent;
+      }
+      &:hover {
+        &::before {
+          color: @primaryColor;
+          opacity: 0;
+        }
+      }
+    }
+  }
+}
+.call-button-mini {
+  .VuetifyApp {
+    .call-button-container {
+      .dropdown-vue {
+        .buttons-container {
+          [class^="call-button-container-"] {
+            button {
+              background: transparent;
+              box-shadow: none;
+              border: none;
+            }
+            .v-btn {
+              padding: 0px;
+            }
+          }
+        }
+      }
+      &.single {
+        .single-btn-container {
+          button {
+            margin-right: 0;
+            border: none;
+            background: transparent;
+            justify-content: center;
+            .v-btn__content {
+              span {
+                display: none;
+              }
+              .uiIconSocPhone {
+                font-size: 18px !important;
+                margin-bottom: 0px;
+              }
+            }
+          }
+        }
+      }
+    }
+    &:hover {
+      &.single {
+        .single-btn-container {
+          button {
+            width: inherit;
+            margin-right: 0;
+            border: none;
+            background: #ffffff;
+            span {
+              width: inherit;
+            }
+          }
+        }
+      }
+    }
+  }
+  &.call-button--tiptip {
+    .VuetifyApp {
+      .call-button-container {
+        .buttons-container {
+          [class^="call-button-container-"] {
+            button {
+              padding-left: 0;
+              .v-btn__content {
+                .uiIconSocPhone {
+                  font-size: 16px !important;
+                  &::before {
+                    content: "\e92b";
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.VuetifyApp {
+  .v-application {
+    .btn {
+      &.jitsiCallAction {
+        border: none !important;
+        background: transparent !important;
+
+      }
+    }
+  }
+}
+.call-button--profile, .call-button--chat {
+  .uiIconSocPhone {
+    font-size: 14px;
+    margin-bottom: -2px;
+  }
+}
+
+#tiptip_content {
+  .connectAction {
+    .btn {
+      &.jitsiCallAction {
+        height: inherit;
+      }
+    }
+  }
+}
+.jitsiCallAction {
+  .v-btn__content {
+    justify-content:center;
+  }
+}
+#peopleCompactCardBottomDrawer {
+  .v-application--is-ltr {
+    .jitsiCallAction {
+      margin-left: 8px;
+      margin-right: 4px;
+    }
+  }
+  .v-application--is-rtl {
+    .jitsiCallAction {
+      margin-left: 4px;
+      margin-right: 8px;
+    }
+  }
+  .single-btn-container {
+    font-size: 0.8125rem;
+  }
+}
+#profileHeaderActions .profileHeaderActionComponents {
+  .call-button-container:hover {
+    background-color: @grayLighter!important;
+    opacity: 0.08;
+  }
+  @media (min-width: @minLargeTabletWidth) {
+    .call-button {
+      margin-right: 8px;
+    }
+  }
+  .buttonTitle {
+    color: inherit;
+  }
+  .jitsiCallAction {
+    color: @primaryColor !important;
+    i {
+      font-size: medium !important;
+      margin: 0 !important;
+    }
+  }
+}
