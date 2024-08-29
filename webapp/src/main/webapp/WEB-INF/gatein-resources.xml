@@ -27,7 +27,7 @@
     <application-name>jitsi</application-name>
     <portlet-name>JitsiPortlet</portlet-name>
     <skin-name>Enterprise</skin-name>
-    <css-path>/skin/css/jitsi.css</css-path>
+    <css-path>/skin/jitsi.css</css-path>
     <overwrite>true</overwrite>
     <css-priority>1</css-priority>
   </portlet-skin>

@@ -139,4 +139,102 @@ export default {
   }
 };
 </script>
+<style scoped lang="less">
+// .VuetifyApp {
+.spacer {
+  flex-grow: unset !important;
+  width: 12%;
+}
+.v-dialog {
+  border-radius: 2px;
+  height: 160px;
+  .v-sheet.v-card {
+    border-radius: 2px;
+    height: 160px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 80px);
+    grid-auto-rows: 10px;
+    width: initial;
+    [class^="uiIcon"].start-call {
+      position: absolute;
+      top: 15%;
+      left: 24%;
+      &::before {
+        content: "\e61c";
+        color: #fb8e18;
+        font-size: 20px;
+      }
+    }
+    .v-avatar {
+      border-radius: 50% !important;
+      align-self: center;
+      justify-self: center;
+      top: 15px;
+      left: -15px;
+    }
+    .v-card__text {
+      grid-column: 2 / span 2;
+      grid-row: 1 / span 1;
+      padding: 20px 15px 20px 0px;
+      font-size: 16px;
+      color: #333;
+    }
+    .v-card__actions {
+      grid-column: 1 / span 3;
+      grid-row: 2 / span 1;
+      padding: 8px 0px !important;
+      display: flex;
+      justify-content: center;
+      .v-btn {
+        padding: 0;
+        height: 50px;
+        width: 50px;
+        border: 1px solid;
+        margin-left: 0px !important;
+        .v-btn__content {
+          [class^="uiIcon"] {
+            position: relative;
+            height: 25px;
+            width: 50px;
+            &::before {
+              position: absolute;
+              font-size: 24px;
+              right: 50%;
+              transform: translateX(50%);
+            }
+          }
+        }
+        &.accept-button {
+          .uiIconPopupPhone {
+            color: white;
+            &::before {
+              content: "\e92b";
+            }
+          }
+        }
+        &.decline-button {
+          //&:before {
+          //  color: transparent;
+          //}
+          .uiIconPopupClose {
+            opacity: 1;
+            &::before {
+              color: #aeb3b7;
+              content: "\e9d2";
+            }
+          }
+        }
+      }
+      .button-title {
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        color: #333;
+      }
+    }
+  }
+}
+// }
+</style>
 

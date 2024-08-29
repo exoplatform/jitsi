@@ -16,7 +16,7 @@
           </v-icon>
         </v-btn>
       </template>
-      <span v-if="displayTooltip" class="buttonTitle">{{ buttonTitle.title }}</span>
+      <span v-if="displayTooltip">{{ buttonTitle.title }}</span>
     </v-tooltip>
     <span
       v-if="displayConnectorName"
@@ -139,3 +139,187 @@ export default {
   }
 };
 </script>
+
+<style scoped lang="less">
+@import "../../../skin/variables.less";
+
+.VuetifyApp {
+  .v-btn:not(.v-btn--round).v-size--default {
+    padding: 0px;
+    min-width: unset;
+    width: 100%;
+    height: 100%;
+  }
+  .v-btn {
+    padding: 0px;
+  }
+  .theme--light.v-btn {
+    background: inherit;
+    &:focus::before {
+      opacity: 0;
+      background: transparent;
+    }
+  }
+  .call-button-container {
+    button {
+      .v-btn__content {
+        letter-spacing: normal;
+        padding: 0 10px;
+        height: 100%;
+      }
+    }
+    &.single {
+      &:hover {
+        button:hover {
+          span {
+            color: unset;
+          }
+        }
+      }
+    }
+  }
+}
+#chat-application {
+  .call-button-container {
+    .theme--light.v-btn {
+      background: inherit;
+      &:focus::before {
+        opacity: 0;
+        background: transparent;
+      }
+      &:hover {
+        &::before {
+          color: @primaryColor;
+          opacity: 0;
+        }
+      }
+    }
+  }
+}
+.call-button-mini {
+  .VuetifyApp {
+    .call-button-container {
+      .dropdown-vue {
+        .buttons-container {
+          [class^="call-button-container-"] {
+            button {
+              background: transparent;
+              box-shadow: none;
+              border: none;
+            }
+            .v-btn {
+              padding: 0px;
+            }
+          }
+        }
+      }
+      &.single {
+        .single-btn-container {
+          button {
+            margin-right: 0;
+            border: none;
+            background: transparent;
+            justify-content: center;
+            .v-btn__content {
+              span {
+                display: none;
+              }
+              .uiIconSocPhone {
+                font-size: 18px !important;
+                margin-bottom: 0px;
+              }
+            }
+          }
+        }
+      }
+    }
+    &:hover {
+      &.single {
+        .single-btn-container {
+          button {
+            width: inherit;
+            margin-right: 0;
+            border: none;
+            background: #ffffff;
+            span {
+              width: inherit;
+            }
+          }
+        }
+      }
+    }
+  }
+  &.call-button--tiptip {
+    .VuetifyApp {
+      .call-button-container {
+        .buttons-container {
+          [class^="call-button-container-"] {
+            button {
+              padding-left: 0;
+              .v-btn__content {
+                .uiIconSocPhone {
+                  font-size: 16px !important;
+                  &::before {
+                    content: "\e92b";
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</style>
+<style lang="less">
+.VuetifyApp {
+  .v-application {
+    .btn {
+      &.jitsiCallAction {
+        border: none !important;
+        background-color: inherit !important;
+
+      }
+    }
+  }
+}
+.call-button--profile, .call-button--chat {
+  .uiIconSocPhone {
+    font-size: 14px;
+    margin-bottom: -2px;
+  }
+}
+
+#tiptip_content {
+  .connectAction {
+    .btn {
+      &.jitsiCallAction {
+        height: inherit;
+      }
+    }
+  }
+}
+.jitsiCallAction {
+  .v-btn__content {
+    justify-content:center;
+  }
+}
+#peopleCompactCardBottomDrawer {
+  .v-application--is-ltr {
+    .jitsiCallAction {
+      margin-left: 8px;
+      margin-right: 4px;
+    }
+  }
+  .v-application--is-rtl {
+    .jitsiCallAction {
+      margin-left: 4px;
+      margin-right: 8px;
+    }
+  }
+  .single-btn-container {
+    font-size: 0.8125rem;
+  }
+}
+</style>
