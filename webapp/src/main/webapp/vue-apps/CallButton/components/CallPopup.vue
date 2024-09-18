@@ -3,10 +3,9 @@
     <v-app v-if="isDialogVisible">
       <v-dialog
         ref="incoming"
-        id="incomingCallPopup"
         :retain-focus="false"
         v-model="isDialogVisible"
-        content-class="incoming-dialog"
+        content-class="incoming-dialog incomingCallPopup"
         no-click-animation
         persistent
         hide-overlay
