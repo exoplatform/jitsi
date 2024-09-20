@@ -36,6 +36,7 @@
     <name>transliteration</name>
     <load-group>webConferencingJitsiGRP</load-group>
     <script>
+      <minify>false</minify>
       <path>/js/transliteration.min.js</path>
     </script>
   </module>
