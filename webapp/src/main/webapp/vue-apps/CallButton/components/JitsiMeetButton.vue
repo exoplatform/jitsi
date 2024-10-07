@@ -23,6 +23,7 @@
       @click.stop.prevent="startCall">{{ 'Jitsi' }}</span>
     <span
       v-else-if="!displayTooltip"
+      class="ps-1"
       @click.stop.prevent="startCall">{{ buttonTitle.title }}</span>
   </div>
 </template>
