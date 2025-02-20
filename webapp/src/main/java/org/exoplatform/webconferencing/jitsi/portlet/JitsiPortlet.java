@@ -30,12 +30,12 @@ import javax.portlet.RenderResponse;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.JavascriptManager;
 import org.exoplatform.webconferencing.WebConferencingService;
 import org.exoplatform.webconferencing.jitsi.JitsiProvider;
-import org.exoplatform.webui.application.WebuiRequestContext;
 
 /**
  * This portlet loads Javascript module of this connector and register its provider(s) in the Web
@@ -79,7 +79,7 @@ public class JitsiPortlet extends GenericPortlet {
         JitsiProvider.JitsiSettings settings = provider.getSettings();
         settings.addMessages(getResourceMessages("locale.jitsi.Jitsi", request.getLocale()));
         String settingsJson = asJSON(settings);
-        JavascriptManager js = ((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).getJavascriptManager();
+        JavascriptManager js = PortalRequestContext.getCurrentInstance().getJavascriptManager();
         // first load Web Conferencing itself,
         js.require("SHARED/webConferencing", "webConferencing")
           // load our connector module to myProvider variable
