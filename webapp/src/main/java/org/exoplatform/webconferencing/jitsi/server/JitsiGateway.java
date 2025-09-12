@@ -214,10 +214,20 @@ public class JitsiGateway extends AbstractHttpServlet {
       HttpEntity entity = response.getEntity();
       if (entity != null) {
         if (resp.getContentType() != null && resp.getContentType().startsWith(APPLICATION_JSON)) {
+          // JSON can be safely written as text
           resp.setCharacterEncoding(UTF_8);
           resp.getWriter().write(EntityUtils.toString(entity, UTF_8));
         } else {
-          resp.getWriter().write(EntityUtils.toString(entity));
+          // For binary (images, css, js, pdf, etc.) → stream raw bytes
+          try (InputStream in = entity.getContent();
+              OutputStream out = resp.getOutputStream()) {
+              byte[] buffer = new byte[8192];
+              int len;
+              while ((len = in.read(buffer)) != -1) {
+                  out.write(buffer, 0, len);
+              }
+              out.flush();
+          }
         }
       }
     } catch (IOException e) {
