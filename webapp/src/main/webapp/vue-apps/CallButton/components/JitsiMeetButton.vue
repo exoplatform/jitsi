@@ -17,8 +17,7 @@
         </v-btn>
       </template>
       <span v-if="displayTooltip" class="buttonTitle">{{ buttonTitle.title }}</span>
-    </v-tooltip>
-    <span
+    </v-tooltip><span
       v-if="displayConnectorName"
       @click.stop.prevent="startCall">{{ 'Jitsi' }}</span>
     <span
