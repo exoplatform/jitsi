@@ -36,7 +36,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.impl.crypto.JwtSignatureValidator;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 
@@ -281,7 +280,7 @@ public class WebconferencingSessionFilter extends AbstractFilter implements Filt
    * @return the claims
    */
   private Claims parseJWT(String token, String secret) {
-    return Jwts.parser().setSigningKey(Keys.hmacShaKeyFor(secret.getBytes())).parseClaimsJws(token).getBody();
+    return Jwts.parser().setSigningKey(Keys.hmacShaKeyFor(secret.getBytes())).build().parseClaimsJws(token).getBody();
   }
 
   /**
