@@ -132,6 +132,7 @@ public class JitsiContextResource implements ResourceContainer {
     try {
       Claims body = Jwts.parser()
                         .setSigningKey(Keys.hmacShaKeyFor(provider.getExternalAuthSecret().getBytes()))
+                        .build()
                         .parseClaimsJws(token)
                         .getBody();
       owner = body.get("owner", String.class);
