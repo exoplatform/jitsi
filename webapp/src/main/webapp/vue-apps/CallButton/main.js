@@ -145,7 +145,7 @@ export function initCallPopup(
     document.body.appendChild(container);
     let onAccepted;
     let onRejected;
-    let autoRejectId;
+    let alertTimeoutId;
     const comp = new Vue({
       el: container,
       components: {
@@ -161,10 +161,10 @@ export function initCallPopup(
         };
       },
       mounted() {
-        autoRejectId = setTimeout(() => {
-          log.info(`Auto rejected the call: ${  callId  } user: ${  currentUserId}`);
-          doReject();
-        }, 60000); // Reject automatically calls in 60 seconds if the user hasn't answered
+        alertTimeoutId = setTimeout(() => {
+          log.info(`Incoming call alert timed out: ${  callId  } user: ${  currentUserId}`);
+          closeCallPopup(callId);
+        }, 60000); // Close the alert in 60 seconds if the user hasn't answered, without declining the call
       },
       i18n,
       vuetify,
@@ -202,7 +202,7 @@ export function initCallPopup(
       callId,
       callerId,
       close: function() {
-        clearTimeout(autoRejectId); // Clear autoreject for the call
+        clearTimeout(alertTimeoutId); // Clear the alert timeout for the call
         if (playRingtone) {
           localStorage.removeItem(ringId);
         }
