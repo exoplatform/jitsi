@@ -286,7 +286,8 @@
               }
             }
           }
-          if (user) {
+          if (user && user.state === "joined") {
+            // A user who left, declined or never joined a started call gets its "started" state
             process.resolve(user.state);
           } else {
             process.resolve(call.state);
@@ -569,8 +570,9 @@
                             webConferencing.updateCall(callId, "declined").then(() => {
                               log.info("Call declined: " + callId + " by user " + currentUserId);
                             }).catch(err => {
-                              if (err && (err.code === "NOT_FOUND_ERROR")) {
-                                log.trace("<< Call not found " + callId);
+                              if (err && err.code === "CLIENT_ERROR" && String(err.message).startsWith("Call not found")) {
+                                // The call no longer exists: a P2P call is removed when its caller leaves it
+                                log.trace("<< Call not declined " + callId);
                               } else {
                                 log.error("Failed to decline call: " + callId, err);
                               }
