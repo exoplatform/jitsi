@@ -286,7 +286,8 @@
               }
             }
           }
-          if (user) {
+          if (user && user.state === "joined") {
+            // A user who left, declined or never joined a started call gets its "started" state
             process.resolve(user.state);
           } else {
             process.resolve(call.state);
@@ -564,28 +565,18 @@
                           });
                           popup.onRejected(() => {
                             log.trace("<<< User declined just " + update.callState + " call " + callId);
-                            if (isGroup) {
-                              // We need inform other windows of the user in the browser to close popups in them
-                              webConferencing.updateCall(callId, "leaved").then(() => {
-                                log.info("Call declined: " + callId + " by user " + currentUserId);
-                              });
-                            } else {
-                              if (update.callState !== "stopped" && update.callState !== "joined") {
-                                // Delete the call if it is not group one, not already stopped and wasn't joined -
-                                // a group call will be deleted automatically when last party leave it.
-                                webConferencing.deleteCall(callId).then(() => {
-                                  log.info("Call deleted: " + callId + " by user " + currentUserId);
-                                }).catch(err => {
-                                  if (err && (err.code === "NOT_FOUND_ERROR")) {
-                                    // already deleted
-                                    log.trace("<< Call not found " + callId);
-                                  } else {
-                                    log.error("Failed to stop call: " + callId, err);
-                                    webConferencing.showError("Error stopping call", webConferencing.errorText(err));
-                                  }
-                                });
+                            // Declining never ends the call, a P2P one included: the call goes on for the other
+                            // participants, and the alert closes on every client of the user
+                            webConferencing.updateCall(callId, "declined").then(() => {
+                              log.info("Call declined: " + callId + " by user " + currentUserId);
+                            }).catch(err => {
+                              if (err && err.code === "CLIENT_ERROR" && String(err.message).startsWith("Call not found")) {
+                                // The call no longer exists: a P2P call is removed when its caller leaves it
+                                log.trace("<< Call not declined " + callId);
+                              } else {
+                                log.error("Failed to decline call: " + callId, err);
                               }
-                            }
+                            });
                           });
                         }).catch(err => {
                           log.error("Error openning call popup for " + callId, err);
