@@ -192,6 +192,28 @@
       this.getCallUrl = getCallUrl;
 
       /**
+       * Starts a call in the given context, as its call button does: the missed call notification calls the caller
+       * back with it. A call window already open under the call's name is reused.
+       */
+      this.startCall = function(context) {
+        return Promise.resolve(context.details()).then(target => startCall(context, target));
+      };
+
+      /**
+       * Joins a started call, as accepting its incoming call alert does: the missed call notification joins a group
+       * call with it. A call window already open under the call's name is reused.
+       */
+      this.joinCall = function(callId) {
+        const callWindow = webConferencing.showCallWindow("", callWindowName(callId));
+        return Promise.resolve(getCallUrl(callId)).then(callUrl => {
+          // A window already on the call is left as it is: navigating it again would drop the user from the call
+          if (callWindow && callWindow.location.href !== callUrl) {
+            callWindow.location = callUrl;
+          }
+        });
+      };
+
+      /**
        * Find call ID from a call URL (link).
        */
       var findCallId = function(url) {
