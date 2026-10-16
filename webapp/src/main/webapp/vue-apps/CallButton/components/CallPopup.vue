@@ -43,9 +43,9 @@
               <i class="uiIconPopupClose"></i>
             </v-btn>
             <span class="button-title" @click="passRejected()">
-              {{ i18n.te("UICallPopup.label.ignore")
-                ? $t("UICallPopup.label.ignore")
-                : "Ignore" }}
+              {{ i18n.te("UICallPopup.label.decline")
+                ? $t("UICallPopup.label.decline")
+                : "Decline" }}
             </span>
             <audio
               ref="audio"
