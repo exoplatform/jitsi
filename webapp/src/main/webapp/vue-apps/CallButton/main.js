@@ -10,6 +10,20 @@ const localePortlet = 'locale.jitsi';
 const resourceBundleName = 'Jitsi';
 const url = `${eXo.env.portal.context}/${eXo.env.portal.rest}/i18n/bundle/${localePortlet}.${resourceBundleName}-${lang}.json`;
 const log = webConferencing.getLog('jitsi');
+
+// An incoming call is alerted for 1 minute at most, unless the server sets another timeout
+const DEFAULT_INCOMING_CALL_TIMEOUT = 60000;
+
+/**
+ * How long, in milliseconds, an incoming call is alerted: the server notifies the participants who missed the call
+ * when it is over.
+ *
+ * @returns {number} the incoming call timeout
+ */
+function incomingCallTimeout() {
+  return webConferencing.getIncomingCallTimeout && webConferencing.getIncomingCallTimeout() || DEFAULT_INCOMING_CALL_TIMEOUT;
+}
+
 const callStates = new Map();
 const callPopups = new Map();
 
@@ -164,7 +178,7 @@ export function initCallPopup(
         alertTimeoutId = setTimeout(() => {
           log.info(`Incoming call alert timed out: ${  callId  } user: ${  currentUserId}`);
           closeCallPopup(callId);
-        }, 60000); // Close the alert in 60 seconds if the user hasn't answered, without declining the call
+        }, incomingCallTimeout()); // Close the alert if the user hasn't answered, without declining the call
       },
       i18n,
       vuetify,
