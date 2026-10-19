@@ -192,6 +192,40 @@
       this.getCallUrl = getCallUrl;
 
       /**
+       * Starts a call in the given context, as its call button does: the missed call notification calls the caller
+       * back with it. A call window already open under the call's name is reused. The promise resolves once the call
+       * is requested, and is rejected when the call's target cannot be read or the browser blocks the call window: a
+       * later failure closes the call window and is shown by the connector.
+       */
+      this.startCall = function(context) {
+        return Promise.resolve(context.details()).then(target => {
+          const callId = getCallId(context, target);
+          if (!webConferencing.showCallWindow("", callWindowName(callId))) {
+            throw new Error("Call window blocked: " + callId);
+          }
+          startCall(context, target);
+        });
+      };
+
+      /**
+       * Joins a started call, as accepting its incoming call alert does: the missed call notification joins a group
+       * call with it. A call window already open under the call's name is reused. The promise is rejected when the
+       * browser blocks the call window.
+       */
+      this.joinCall = function(callId) {
+        const callWindow = webConferencing.showCallWindow("", callWindowName(callId));
+        if (!callWindow) {
+          return Promise.reject(new Error("Call window blocked: " + callId));
+        }
+        return Promise.resolve(getCallUrl(callId)).then(callUrl => {
+          // A window already on the call is left as it is: navigating it again would drop the user from the call
+          if (callWindow.location.href !== callUrl) {
+            callWindow.location = callUrl;
+          }
+        });
+      };
+
+      /**
        * Find call ID from a call URL (link).
        */
       var findCallId = function(url) {
