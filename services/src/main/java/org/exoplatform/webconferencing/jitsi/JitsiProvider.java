@@ -74,6 +74,9 @@ public class JitsiProvider extends CallProvider {
   /** The Constant VERSION. */
   public static final String VERSION                     = "1.0.0";
 
+  /** The path a Jitsi meeting link carries before its call id. */
+  public static final String CALL_URL_PATH               = "/jitsi/meet/";
+
   /**
    * Settings for Jitsi provider.
    */
@@ -266,6 +269,49 @@ public class JitsiProvider extends CallProvider {
   @Override
   public String getVersion() {
     return VERSION;
+  }
+
+  /**
+   * Reads the call id out of a Jitsi meeting link, as the
+   * {@code findCallId(url)} of {@code webconferencing-jitsi.js} does: the
+   * segment after {@value #CALL_URL_PATH}, without the query string the agenda
+   * appends ({@code ?inviteId=}).
+   *
+   * @param url a meeting link
+   * @return the call id, or <code>null</code> when the link is not a Jitsi
+   *         meeting
+   */
+  @Override
+  public String findCallId(String url) {
+    return extractCallId(url);
+  }
+
+  /**
+   * Reads the call id out of a Jitsi meeting link: the segment after
+   * {@value #CALL_URL_PATH}, up to a query string, a fragment or a further
+   * path segment.
+   *
+   * @param url a meeting link
+   * @return the call id, or <code>null</code> when the link holds none
+   */
+  public static String extractCallId(String url) {
+    if (url == null) {
+      return null;
+    }
+    int meetBase = url.indexOf(CALL_URL_PATH);
+    if (meetBase < 0) {
+      return null;
+    }
+    int idFrom = meetBase + CALL_URL_PATH.length();
+    int idTo = url.length();
+    for (char separator : new char[] { '?', '#', '/' }) {
+      int index = url.indexOf(separator, idFrom);
+      if (index >= 0 && index < idTo) {
+        idTo = index;
+      }
+    }
+    String callId = url.substring(idFrom, idTo).trim();
+    return callId.isEmpty() ? null : callId;
   }
 
 
