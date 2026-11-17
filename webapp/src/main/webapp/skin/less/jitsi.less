@@ -9,7 +9,7 @@
 	font-size: 14px;
 }
 .incoming-dialog {
-  border: 1px solid #aeb3b7;
+  border: 1px solid var(--allPagesBorderColorDark, #aeb3b7);
   position: absolute;
   bottom: 0;
   right: 0;
@@ -55,7 +55,7 @@
       grid-row: ~"1 / span 1";
       padding: 20px 15px 20px 0px;
       font-size: 16px;
-      color: #333;
+      color: var(--allPagesDarkGrey, #333);
     }
     .v-card__actions {
       grid-column: ~"1 / span 3";
@@ -104,7 +104,7 @@
         font-weight: 700;
         font-size: 14px;
         cursor: pointer;
-        color: #333;
+        color: var(--allPagesDarkGrey, #333);
       }
     }
   }
@@ -208,7 +208,7 @@
             width: inherit;
             margin-right: 0;
             border: none;
-            background: #ffffff;
+            background: var(--allPagesBaseBackground, #ffffff);
             span {
               width: inherit;
             }
