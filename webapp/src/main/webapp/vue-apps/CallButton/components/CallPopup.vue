@@ -5,7 +5,7 @@
         ref="incoming"
         :retain-focus="false"
         v-model="isDialogVisible"
-        content-class="incoming-dialog incomingCallPopup"
+        :content-class="state === 'shown' ? 'incoming-dialog incomingCallPopup incomingCallRinging' : 'incoming-dialog incomingCallPopup'"
         no-click-animation
         persistent
         hide-overlay
