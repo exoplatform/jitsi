@@ -1,12 +1,13 @@
 <template>
   <div>
     <v-tooltip bottom :disabled="!displayTooltip">
-      <template #activator="{ on, attrs }">
+      <!-- a tooltip activator binds its listeners only: its attrs would announce the button as a menu opener -->
+      <template #activator="{ on }">
         <v-btn
           id="btnJitsiButton"
+          :aria-label="buttonTitle.title"
           class="jitsiCallAction"
           @click.stop.prevent="startCall"
-          v-bind="attrs"
           v-on="on"
           icon>
           <v-icon
