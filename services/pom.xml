@@ -33,6 +33,10 @@
   <name>eXo Jitsi :: Extension Services</name>
   <description>eXo Jitsi services of portal extension</description>
 
+  <properties>
+    <exo.test.coverage.ratio>0.10</exo.test.coverage.ratio>
+  </properties>
+
   <dependencies>
     <!-- Web Conferencing extension -->
     <dependency>
@@ -40,6 +44,12 @@
       <artifactId>web-conferencing-services</artifactId>
       <type>jar</type>
       <scope>provided</scope>
+    </dependency>
+    <!-- Web Conferencing service fields reference ECMS classes: needed to mock it in tests -->
+    <dependency>
+      <groupId>org.exoplatform.ecms</groupId>
+      <artifactId>ecms-social-integration</artifactId>
+      <scope>test</scope>
     </dependency>
     <!-- Portal & Social -->
     <dependency>

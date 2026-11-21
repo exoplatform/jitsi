@@ -21,6 +21,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -35,6 +36,8 @@ import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.UserStatus;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.IdentityConstants;
@@ -57,10 +60,13 @@ import io.jsonwebtoken.security.Keys;
 public class JitsiContextResource implements ResourceContainer {
 
   /** The Constant INTERNAL_AUTH. */
-  private static final String          INTERNAL_AUTH = "internal_auth";
+  private static final String          INTERNAL_AUTH   = "internal_auth";
+
+  /** The prefix of the id the call page gives a guest. */
+  private static final String          GUEST_ID_PREFIX = "guest-";
 
   /** The Constant LOG. */
-  private static final Log             LOG           = ExoLogger.getLogger(JitsiContextResource.class);
+  private static final Log             LOG             = ExoLogger.getLogger(JitsiContextResource.class);
 
   /** The Constant webconferencing. */
   private final WebConferencingService webconferencing;
@@ -68,17 +74,23 @@ public class JitsiContextResource implements ResourceContainer {
   /** The provider. */
   private final JitsiProvider          provider;
 
+  /** The organization service. */
+  private final OrganizationService    organization;
+
   /**
    * Instantiates a new jitsi context resource.
    *
    * @param webconferencing the webconferencing
    * @param repositoryService the repository service
    * @param sessionProviders the session providers
+   * @param organization the organization service
    */
   public JitsiContextResource(WebConferencingService webconferencing,
                               RepositoryService repositoryService,
-                              SessionProviderService sessionProviders) {
+                              SessionProviderService sessionProviders,
+                              OrganizationService organization) {
     this.webconferencing = webconferencing;
+    this.organization = organization;
     this.provider = (JitsiProvider) webconferencing.getProvider(JitsiProvider.TYPE);
   }
 
@@ -92,8 +104,22 @@ public class JitsiContextResource implements ResourceContainer {
   @GET
   @Path("/context/{userId}")
   @Produces(MediaType.APPLICATION_JSON)
-  public ContextInfo context(@Context HttpServletRequest request, @PathParam("userId") String userId) {
-    return getCurrentContext(userId, request.getLocale());
+  @Operation(
+      summary = "Read the call context",
+      method = "GET",
+      description = "Use this method to read the call context of the signed-in user, or of a guest when no user is signed in. The response is private and not cached.")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled. Context object returned."),
+      @ApiResponse(responseCode = "403", description = "The context is not available to the current request. Error code: " + ErrorInfo.CODE_ACCESS_ERROR)})
+  public Response context(@Context HttpServletRequest request, @PathParam("userId") String userId) {
+    if (!isContextAllowed(userId)) {
+      return Response.status(Status.FORBIDDEN)
+                     .entity(ErrorInfo.accessError("Access denied"))
+                     .type(MediaType.APPLICATION_JSON)
+                     .cacheControl(noStore())
+                     .build();
+    }
+    ContextInfo context = getCurrentContext(userId, request.getLocale());
+    return Response.ok(context, MediaType.APPLICATION_JSON).cacheControl(noStore()).build();
   }
 
   /**
@@ -259,6 +285,40 @@ public class JitsiContextResource implements ResourceContainer {
   @Path("/resources/version")
   public Response resourcesVersion() {
     return Response.status(Status.OK).entity(ResourceRequestHandler.VERSION).build();
+  }
+
+  private static CacheControl noStore() {
+    CacheControl cacheControl = new CacheControl();
+    cacheControl.setPrivate(true);
+    cacheControl.setNoCache(true);
+    cacheControl.setNoStore(true);
+    return cacheControl;
+  }
+
+  /**
+   * Whether the context of the given id may be returned to the current
+   * request: a signed-in user gets their own context only, and a request
+   * without a signed-in user gets a guest's context only, never a platform
+   * user's. The endpoint never passes a null or an empty id.
+   *
+   * @param userId the id the context is asked for
+   * @return true when the context may be returned
+   */
+  boolean isContextAllowed(String userId) {
+    ConversationState state = ConversationState.getCurrent();
+    String currentUserId = state == null || state.getIdentity() == null ? null : state.getIdentity().getUserId();
+    if (currentUserId != null && !IdentityConstants.ANONIM.equals(currentUserId)) {
+      return currentUserId.equals(userId);
+    }
+    if (!userId.startsWith(GUEST_ID_PREFIX)) {
+      return false;
+    }
+    try {
+      return organization.getUserHandler().findUserByName(userId, UserStatus.ANY) == null;
+    } catch (Exception e) {
+      LOG.warn("Cannot check whether {} is a platform user", userId, e);
+      return false;
+    }
   }
 
   /**
