@@ -81,15 +81,18 @@ class JitsiContextResourceTest {
   void anotherUsersContextIsRefusedWithForbiddenAndNotStored() {
     signIn("john");
     HttpServletRequest request = mock(HttpServletRequest.class);
-    Response response = resource.context(request, "mary");
-    assertEquals(Status.FORBIDDEN.getStatusCode(), response.getStatus());
-    CacheControl cacheControl = (CacheControl) response.getMetadata().getFirst("Cache-Control");
-    assertTrue(cacheControl.isNoStore());
-    assertTrue(cacheControl.isNoCache());
-    assertTrue(cacheControl.isPrivate());
-    ErrorInfo error = (ErrorInfo) response.getEntity();
-    assertEquals(ErrorInfo.CODE_ACCESS_ERROR, error.getCode());
-    assertEquals("Access denied", error.getMessage());
+    try (MockedStatic<Utils> utils = mockStatic(Utils.class)) {
+      Response response = resource.context(request, "mary");
+      assertEquals(Status.FORBIDDEN.getStatusCode(), response.getStatus());
+      CacheControl cacheControl = (CacheControl) response.getMetadata().getFirst("Cache-Control");
+      assertTrue(cacheControl.isNoStore());
+      assertTrue(cacheControl.isNoCache());
+      assertTrue(cacheControl.isPrivate());
+      ErrorInfo error = (ErrorInfo) response.getEntity();
+      assertEquals(ErrorInfo.CODE_ACCESS_ERROR, error.getCode());
+      assertEquals("Access denied", error.getMessage());
+      utils.verifyNoInteractions();
+    }
   }
 
   @Test
