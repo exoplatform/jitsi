@@ -32,6 +32,10 @@
   <name>eXo Jitsi :: Extension Packaging</name>
   <description>eXo Jitsi packaging for installation</description>
   
+  <properties>
+    <!-- Generate and publish the CycloneDX SBOM of the deliverable zip -->
+    <sbom.skip>false</sbom.skip>
+  </properties>
   <dependencies>
     <!-- My Connector -->
     <dependency>
